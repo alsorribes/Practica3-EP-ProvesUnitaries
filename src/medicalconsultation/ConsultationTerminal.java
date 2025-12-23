@@ -125,4 +125,31 @@ public class ConsultationTerminal {
         this.treatmentDatesSet = false;
         this.signatureStamped = false;
     }
+
+    /**
+     * Doctor reports medical assessments observed during the revision visit.
+     * Updates the patient's medical history with new annotations.
+     *
+     * CONTRACT:
+     * - Preconditions: Revision must be initialized
+     * - Postconditions: MedicalHistory.history attribute updated with new annotations
+     *
+     * @param assess the medical assessment text to add to history
+     * @throws ProceduralException if revision not initialized
+     */
+    public void enterMedicalAssessmentInHistory(String assess) throws ProceduralException {
+
+        // Check precondition: revision must be initialized
+        if (!revisionInitialized) {
+            throw new ProceduralException("Cannot enter assessment: revision not initialized");
+        }
+
+        // Validate input
+        if (assess == null || assess.trim().isEmpty()) {
+            throw new IllegalArgumentException("Assessment cannot be null or empty");
+        }
+
+        // Add annotations to medical history
+        currentMedicalHistory.addMedicalHistoryAnnotations(assess);
+    }
 }
