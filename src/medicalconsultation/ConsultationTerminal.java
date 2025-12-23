@@ -152,4 +152,26 @@ public class ConsultationTerminal {
         // Add annotations to medical history
         currentMedicalHistory.addMedicalHistoryAnnotations(assess);
     }
+
+    /**
+     * Doctor initiates the prescription editing process.
+     * Enters prescription edition mode for the current illness.
+     *
+     * CONTRACT:
+     * - Preconditions: Revision must be initialized
+     * - Postconditions: Prescription edition mode activated
+     *
+     * @throws ProceduralException if revision not initialized
+     */
+    public void initMedicalPrescriptionEdition() throws ProceduralException {
+
+        // Check precondition: revision must be initialized
+        if (!revisionInitialized) {
+            throw new ProceduralException(
+                    "Cannot init prescription edition: revision not initialized");
+        }
+
+        // Enter prescription edition mode
+        this.prescriptionEditionMode = true;
+    }
 }
