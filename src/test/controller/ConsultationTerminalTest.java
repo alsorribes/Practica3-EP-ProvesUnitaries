@@ -255,4 +255,106 @@ public class ConsultationTerminalTest {
 
         printTestResult("initRevision - AnyCurrentPrescriptionException for missing prescription", passed);
     }
+
+    // ========== TESTS FOR enterMedicalAssessmentInHistory ==========
+
+    /**
+     * Test: enterMedicalAssessmentInHistory with valid assessment should succeed.
+     */
+    public void testEnterAssessment_Success() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            String assessment = "Patient shows improvement in glucose levels";
+
+            // Act
+            terminal.enterMedicalAssessmentInHistory(assessment);
+
+            // Assert
+            String history = terminal.getCurrentMedicalHistory().getHistory();
+            if (history.contains(assessment)) {
+                passed = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+        }
+
+        printTestResult("enterAssessment - Success scenario", passed);
+    }
+
+    /**
+     * Test: enterAssessment without initialized revision should throw ProceduralException.
+     */
+    public void testEnterAssessment_NoRevisionInitialized() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange - NO initRevision called
+            String assessment = "Some assessment";
+
+            // Act
+            terminal.enterMedicalAssessmentInHistory(assessment);
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("enterAssessment - ProceduralException when revision not initialized", passed);
+    }
+
+    /**
+     * Test: enterAssessment with null should throw IllegalArgumentException.
+     */
+    public void testEnterAssessment_NullAssessment() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+
+            // Act
+            terminal.enterMedicalAssessmentInHistory(null);
+
+        } catch (IllegalArgumentException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("enterAssessment - IllegalArgumentException for null assessment", passed);
+    }
+
+    /**
+     * Test: enterAssessment with empty string should throw IllegalArgumentException.
+     */
+    public void testEnterAssessment_EmptyAssessment() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+
+            // Act
+            terminal.enterMedicalAssessmentInHistory("   ");
+
+        } catch (IllegalArgumentException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("enterAssessment - IllegalArgumentException for empty assessment", passed);
+    }
 }
