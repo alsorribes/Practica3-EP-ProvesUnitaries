@@ -494,6 +494,60 @@ public class ConsultationTerminal {
         this.prescriptionEditionMode = false;
     }
 
+    /**
+     * Doctor stamps their electronic signature on the prescription.
+     * Incorporates the digital signature into the medical prescription.
+     *
+     * CONTRACT:
+     * - Preconditions:
+     *   * Prescription edition mode active
+     *   * Treatment dates set (prescDate and endDate)
+     * - Postconditions: MedicalPrescription.eSign set to doctor's digital signature
+     *
+     * @throws eSignatureException if there's a problem stamping the signature
+     * @throws ProceduralException if preconditions not met
+     */
+    public void stampeeSignature() throws eSignatureException, ProceduralException {
+
+        // Check preconditions
+        if (!prescriptionEditionMode) {
+            throw new ProceduralException(
+                    "Cannot stamp signature: prescription edition not initialized");
+        }
+
+        if (!treatmentDatesSet) {
+            throw new ProceduralException(
+                    "Cannot stamp signature: treatment ending date not set. " +
+                            "Call enterTreatmentEndingDate() first");
+        }
+
+        // Simulate obtaining doctor's digital signature
+        // In a real system, this would involve:
+        // 1. Reading from a smart card or certificate
+        // 2. Cryptographic signing of the prescription data
+        // 3. Hardware security module interaction
+
+        try {
+            // For now, create a simple signature representation
+            // This would be replaced with actual cryptographic signature
+            String signatureData = "DIGITAL_SIGNATURE_" + System.currentTimeMillis();
+            byte[] signature = signatureData.getBytes();
+
+            DigitalSignature digitalSignature = new DigitalSignature(signature);
+
+            // Stamp signature on prescription
+            currentPrescription.seteSign(digitalSignature);
+
+            // Mark signature as stamped
+            this.signatureStamped = true;
+
+        } catch (Exception e) {
+            throw new eSignatureException(
+                    "Error generating or stamping digital signature: " + e.getMessage());
+        }
+    }
+
+
     // ========== INTERNAL OPERATIONS ==========
 
     /**
@@ -524,7 +578,4 @@ public class ConsultationTerminal {
             }
         }
     }
-
-
-
 }
