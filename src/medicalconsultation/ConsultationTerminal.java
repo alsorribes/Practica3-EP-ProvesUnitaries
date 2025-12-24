@@ -456,6 +456,22 @@ public class ConsultationTerminal {
         this.treatmentDatesSet = true;
     }
 
+    /**
+     * Internal operation: Sets prescription date (current) and ending date.
+     * Called after electronic signature is stamped.
+     *
+     * @param date the ending date for the treatment
+     */
+    private void setPrescDateAndEndDate(Date date) {
+        Date currentDate = new Date();
+
+        // Set prescription date to current date
+        currentPrescription.setPrescDate(currentDate);
+
+        // Set ending date to provided date
+        currentPrescription.setEndDate(date);
+    }
+
     // ========== INTERNAL OPERATIONS ==========
 
     /**
