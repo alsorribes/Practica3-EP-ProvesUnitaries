@@ -336,6 +336,41 @@ public class ConsultationTerminal {
         currentPrescription.addLine(prodID, instruc);
     }
 
+    /**
+     * Doctor modifies the dose of an existing medicine in the prescription.
+     * Updates the prescription line for the specified product.
+     *
+     * CONTRACT:
+     * - Preconditions: Prescription edition mode must be active
+     * - Postconditions: Posology.dose attribute updated to newDose value
+     *
+     * @param prodID the product identifier of the medicine to modify
+     * @param newDose the new dose value
+     * @throws ProductNotInPrescriptionException if product not found in prescription
+     * @throws ProceduralException if prescription edition not active
+     */
+    public void modifyDoseInLine(ProductID prodID, float newDose)
+            throws ProductNotInPrescriptionException, ProceduralException {
+
+        // Check precondition: prescription edition mode must be active
+        if (!prescriptionEditionMode) {
+            throw new ProceduralException(
+                    "Cannot modify dose: prescription edition not initialized");
+        }
+
+        // Validate input parameters
+        if (prodID == null) {
+            throw new IllegalArgumentException("ProductID cannot be null");
+        }
+
+        if (newDose <= 0) {
+            throw new IllegalArgumentException("Dose must be greater than 0");
+        }
+
+        // Modify dose in prescription line
+        currentPrescription.modifyDoseInLine(prodID, newDose);
+    }
+
     // ========== INTERNAL OPERATIONS ==========
 
     /**
