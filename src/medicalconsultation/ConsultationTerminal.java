@@ -336,4 +336,37 @@ public class ConsultationTerminal {
         currentPrescription.addLine(prodID, instruc);
     }
 
+    // ========== INTERNAL OPERATIONS ==========
+
+    /**
+     * Internal operation: Creates a medical prescription line with all details.
+     * This method encapsulates the logic for validating and creating prescription lines.
+     *
+     * @param prodID the product identifier
+     * @param instruc the guidelines array
+     * @throws IncorrectTakingGuidelinesException if format is incorrect
+     */
+    private void createMedPrescriptionLine(ProductID prodID, String[] instruc)
+            throws IncorrectTakingGuidelinesException {
+
+        // Validate guidelines array has minimum required elements
+        // Expected format: [dayMoment, duration, dose, freq, freqUnit, instructions]
+        if (instruc.length < 5) {
+            throw new IncorrectTakingGuidelinesException(
+                    "Insufficient guidelines data. Expected at least 5 elements: " +
+                            "[dayMoment, duration, dose, freq, freqUnit]");
+        }
+
+        // Validation logic for each field would go here
+        // For now, basic validation that fields are not null/empty
+        for (int i = 0; i < 5; i++) {
+            if (instruc[i] == null || instruc[i].trim().isEmpty()) {
+                throw new IncorrectTakingGuidelinesException(
+                        "Guideline field at position " + i + " cannot be null or empty");
+            }
+        }
+    }
+
+
+
 }
