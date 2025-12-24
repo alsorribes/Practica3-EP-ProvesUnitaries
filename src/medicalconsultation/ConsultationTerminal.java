@@ -247,6 +247,47 @@ public class ConsultationTerminal {
         return aiResponse;
     }
 
+    /**
+     * Doctor requests to parse the AI's text response into structured suggestions.
+     * The AI breaks down its response into specific actions (Insert/Eliminate/Modify)
+     * following a defined pattern for easier review by the doctor.
+     *
+     * Pattern format per suggestion:
+     * - INSERT: <I, ProductID, dayMoment, duration, dose, freq, freqUnit, instructions>
+     * - ELIMINATE: <E, ProductID>
+     * - MODIFY: <M, ProductID, [only changed fields, others empty]>
+     *
+     * CONTRACT:
+     * - Preconditions:
+     *   * Prescription edition mode active
+     *   * AI has provided a response to a prompt
+     * - Postconditions:
+     *   * List<Suggestion> created with parsed suggestions
+     *   * Each Suggestion instance initialized with AI recommendations
+     *
+     * @return List of structured Suggestion objects
+     * @throws ProceduralException if preconditions not met
+     */
+    public List<Suggestion> extractGuidelinesFromSugg() throws ProceduralException {
+
+        // Check preconditions
+        if (!prescriptionEditionMode) {
+            throw new ProceduralException(
+                    "Cannot extract guidelines: prescription edition not initialized");
+        }
+
+        if (!aiInitialized || lastAIResponse == null) {
+            throw new ProceduralException(
+                    "Cannot extract guidelines: AI has not provided a response yet");
+        }
+
+        // Parse AI response into structured suggestions
+        List<Suggestion> suggestions = decisionMakingAI.parseSuggest(lastAIResponse);
+
+        // Return parsed suggestions for doctor review
+        return suggestions;
+    }
+
 
 
 }
