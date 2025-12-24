@@ -547,6 +547,71 @@ public class ConsultationTerminal {
         }
     }
 
+    /**
+     * Doctor sends the updated medical history and prescription to the Health National Service.
+     * If successful, HNS generates a new treatment code for the prescription.
+     *
+     * CONTRACT:
+     * - Preconditions:
+     *   * Prescription edition mode active
+     *   * Treatment dates set
+     *   * Electronic signature stamped
+     * - Postconditions:
+     *   * MedicalHistory transmitted to HNS for persistent storage
+     *   * Old MedicalPrescription destroyed
+     *   * New MedicalPrescription instance created with treatment code
+     *   * New prescription associated with HNS
+     *   * MedicalPrescription.prescCode updated with HNS-generated code
+     *   * Prescription officially registered and linked to patient's e-prescription
+     *
+     * @return the updated MedicalPrescription with the new treatment code
+     * @throws ConnectException if network connection fails
+     * @throws HealthCardIDException if patient ID not registered
+     * @throws AnyCurrentPrescriptionException if no active prescription exists
+     * @throws NotCompletedMedicalPrescriptionException if prescription incomplete
+     * @throws ProceduralException if preconditions not met
+     */
+    public MedicalPrescription sendHistoryAndPrescription()
+            throws ConnectException, HealthCardIDException,
+            AnyCurrentPrescriptionException,
+            NotCompletedMedicalPrescriptionException,
+            ProceduralException {
+
+        // Check preconditions
+        if (!prescriptionEditionMode) {
+            throw new ProceduralException(
+                    "Cannot send data: prescription edition not initialized");
+        }
+
+        if (!treatmentDatesSet) {
+            throw new ProceduralException(
+                    "Cannot send data: treatment ending date not set");
+        }
+
+        if (!signatureStamped) {
+            throw new ProceduralException(
+                    "Cannot send data: electronic signature not stamped. " +
+                            "Call stampeeSignature() first");
+        }
+
+        // Send history and prescription to HNS for validation and storage
+        // This will generate a new treatment code
+        MedicalPrescription updatedPrescription =
+                healthNationalService.sendHistoryAndPrescription(
+                        currentPrescription.getCip(),
+                        currentMedicalHistory,
+                        currentIllness,
+                        currentPrescription
+                );
+
+        // Replace current prescription with the updated one (with new code)
+        // This simulates the destruction of old instance and creation of new one
+        this.currentPrescription = updatedPrescription;
+
+        // Return the updated prescription with treatment code
+        return updatedPrescription;
+    }
+
 
     // ========== INTERNAL OPERATIONS ==========
 
