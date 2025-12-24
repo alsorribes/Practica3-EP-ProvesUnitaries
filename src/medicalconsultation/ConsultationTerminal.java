@@ -613,6 +613,7 @@ public class ConsultationTerminal {
     }
 
 
+
     // ========== INTERNAL OPERATIONS ==========
 
     /**
@@ -642,5 +643,80 @@ public class ConsultationTerminal {
                         "Guideline field at position " + i + " cannot be null or empty");
             }
         }
+    }
+
+
+    // ========== GETTERS FOR TESTING AND STATE INSPECTION ==========
+
+    /**
+     * Gets the current medical history in session.
+     * @return current MedicalHistory or null if no revision active
+     */
+    public MedicalHistory getCurrentMedicalHistory() {
+        return currentMedicalHistory;
+    }
+
+    /**
+     * Gets the current prescription in session.
+     * @return current MedicalPrescription or null if no revision active
+     */
+    public MedicalPrescription getCurrentPrescription() {
+        return currentPrescription;
+    }
+
+    /**
+     * Gets the current illness being treated.
+     * @return illness name or null if no revision active
+     */
+    public String getCurrentIllness() {
+        return currentIllness;
+    }
+
+    /**
+     * Checks if a revision is currently initialized.
+     * @return true if revision active, false otherwise
+     */
+    public boolean isRevisionInitialized() {
+        return revisionInitialized;
+    }
+
+    /**
+     * Checks if prescription edition mode is active.
+     * @return true if in edition mode, false otherwise
+     */
+    public boolean isPrescriptionEditionMode() {
+        return prescriptionEditionMode;
+    }
+
+    /**
+     * Checks if AI system is initialized.
+     * @return true if AI ready, false otherwise
+     */
+    public boolean isAiInitialized() {
+        return aiInitialized;
+    }
+
+    /**
+     * Gets the last AI response received.
+     * @return last AI response text or null if no response yet
+     */
+    public String getLastAIResponse() {
+        return lastAIResponse;
+    }
+
+    /**
+     * Checks if treatment dates have been set.
+     * @return true if dates set, false otherwise
+     */
+    public boolean isTreatmentDatesSet() {
+        return treatmentDatesSet;
+    }
+
+    /**
+     * Checks if electronic signature has been stamped.
+     * @return true if signature stamped, false otherwise
+     */
+    public boolean isSignatureStamped() {
+        return signatureStamped;
     }
 }
