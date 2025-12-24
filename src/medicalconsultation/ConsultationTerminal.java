@@ -288,6 +288,52 @@ public class ConsultationTerminal {
         return suggestions;
     }
 
+    // ========== PRESCRIPTION EDITING INPUT EVENTS ==========
 
+    /**
+     * Doctor adds a new medicine to the prescription with complete administration guidelines.
+     * Creates a new prescription line with all medication details.
+     *
+     * CONTRACT:
+     * - Preconditions: Prescription edition mode must be active
+     * - Postconditions:
+     *   * New MedicalPrescription line component created
+     *   * Guideline instance created with dayMoment, duration, instructions
+     *   * Posology instance created with dose, freq, freqUnit
+     *   * Line associated with MedicalPrescription
+     *
+     * @param prodID the product identifier of the medicine
+     * @param instruc array with guidelines: [dayMoment, duration, dose, freq, freqUnit, instructions]
+     * @throws ProductAlreadyInPrescriptionException if product already in prescription
+     * @throws IncorrectTakingGuidelinesException if guidelines format is incorrect
+     * @throws ProceduralException if prescription edition not active
+     */
+    public void enterMedicineWithGuidelines(ProductID prodID, String[] instruc)
+            throws ProductAlreadyInPrescriptionException,
+            IncorrectTakingGuidelinesException,
+            ProceduralException {
+
+        // Check precondition: prescription edition mode must be active
+        if (!prescriptionEditionMode) {
+            throw new ProceduralException(
+                    "Cannot add medicine: prescription edition not initialized");
+        }
+
+        // Validate input parameters
+        if (prodID == null) {
+            throw new IllegalArgumentException("ProductID cannot be null");
+        }
+
+        if (instruc == null || instruc.length == 0) {
+            throw new IncorrectTakingGuidelinesException(
+                    "Guidelines cannot be null or empty");
+        }
+
+        // Delegate to internal operation
+        createMedPrescriptionLine(prodID, instruc);
+
+        // Add line to prescription (will throw exceptions if invalid)
+        currentPrescription.addLine(prodID, instruc);
+    }
 
 }
