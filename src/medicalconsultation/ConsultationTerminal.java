@@ -203,5 +203,50 @@ public class ConsultationTerminal {
         this.aiInitialized = true;
     }
 
+    /**
+     * Doctor sends a prompt to the AI and receives suggestions in text format.
+     * The AI's response is stored for later parsing.
+     *
+     * CONTRACT:
+     * - Preconditions:
+     *   * Prescription edition mode active
+     *   * AI system initialized and ready
+     * - Postconditions: AI response displayed and stored for parsing
+     *
+     * @param prompt the question or request sent to the AI
+     * @return the AI's text response to be displayed
+     * @throws BadPromptException if the prompt is unclear or inconsistent
+     * @throws ProceduralException if preconditions not met
+     */
+    public String askAIForSuggest(String prompt)
+            throws BadPromptException, ProceduralException {
+
+        // Check preconditions
+        if (!prescriptionEditionMode) {
+            throw new ProceduralException(
+                    "Cannot ask AI: prescription edition not initialized");
+        }
+
+        if (!aiInitialized) {
+            throw new ProceduralException(
+                    "Cannot ask AI: AI system not initialized. Call callDecisionMakingAI() first");
+        }
+
+        // Validate input
+        if (prompt == null || prompt.trim().isEmpty()) {
+            throw new IllegalArgumentException("Prompt cannot be null or empty");
+        }
+
+        // Send prompt to AI and get response
+        String aiResponse = decisionMakingAI.getSuggestions(prompt);
+
+        // Store response for later parsing
+        this.lastAIResponse = aiResponse;
+
+        // Return response to be displayed to doctor
+        return aiResponse;
+    }
+
+
 
 }
