@@ -371,6 +371,38 @@ public class ConsultationTerminal {
         currentPrescription.modifyDoseInLine(prodID, newDose);
     }
 
+    /**
+     * Doctor removes a medicine from the prescription.
+     * Deletes the prescription line for the specified product.
+     *
+     * CONTRACT:
+     * - Preconditions: Prescription edition mode must be active
+     * - Postconditions:
+     *   * MedicalPrescription line component destroyed
+     *   * Association broken
+     *
+     * @param prodID the product identifier of the medicine to remove
+     * @throws ProductNotInPrescriptionException if product not found in prescription
+     * @throws ProceduralException if prescription edition not active
+     */
+    public void removeLine(ProductID prodID)
+            throws ProductNotInPrescriptionException, ProceduralException {
+
+        // Check precondition: prescription edition mode must be active
+        if (!prescriptionEditionMode) {
+            throw new ProceduralException(
+                    "Cannot remove line: prescription edition not initialized");
+        }
+
+        // Validate input parameter
+        if (prodID == null) {
+            throw new IllegalArgumentException("ProductID cannot be null");
+        }
+
+        // Remove line from prescription
+        currentPrescription.removeLine(prodID);
+    }
+
     // ========== INTERNAL OPERATIONS ==========
 
     /**
