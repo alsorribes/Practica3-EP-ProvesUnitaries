@@ -472,6 +472,28 @@ public class ConsultationTerminal {
         currentPrescription.setEndDate(date);
     }
 
+    /**
+     * Doctor indicates the end of the prescription editing process.
+     * Exits prescription edition mode.
+     *
+     * CONTRACT:
+     * - Preconditions: Prescription edition mode must be active
+     * - Postconditions: Prescription edition mode deactivated
+     *
+     * @throws ProceduralException if prescription edition not active
+     */
+    public void finishMedicalPrescriptionEdition() throws ProceduralException {
+
+        // Check precondition: prescription edition mode must be active
+        if (!prescriptionEditionMode) {
+            throw new ProceduralException(
+                    "Cannot finish edition: prescription edition not initialized");
+        }
+
+        // Exit prescription edition mode
+        this.prescriptionEditionMode = false;
+    }
+
     // ========== INTERNAL OPERATIONS ==========
 
     /**
