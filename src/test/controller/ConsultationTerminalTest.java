@@ -408,4 +408,44 @@ public class ConsultationTerminalTest {
 
         printTestResult("initPrescriptionEdition - ProceduralException when revision not initialized", passed);
     }
+
+
+    // ========== MAIN METHOD TO RUN ALL TESTS ==========
+
+    public static void main(String[] args) {
+        ConsultationTerminalTest test = new ConsultationTerminalTest();
+
+        System.out.println("\n" + "=".repeat(70));
+        System.out.println("RUNNING CONSULTATION TERMINAL UNIT TESTS");
+        System.out.println("=".repeat(70) + "\n");
+
+        // Tests for initRevision
+        System.out.println(">>> Testing initRevision()");
+        test.testInitRevision_Success();
+        test.testInitRevision_NullCIP();
+        test.testInitRevision_NullIllness();
+        test.testInitRevision_EmptyIllness();
+        test.testInitRevision_ConnectException();
+        test.testInitRevision_HealthCardIDException();
+        test.testInitRevision_AnyCurrentPrescriptionException();
+        test.printTestSeparator();
+
+        // Tests for enterMedicalAssessmentInHistory
+        System.out.println(">>> Testing enterMedicalAssessmentInHistory()");
+        test.testEnterAssessment_Success();
+        test.testEnterAssessment_NoRevisionInitialized();
+        test.testEnterAssessment_NullAssessment();
+        test.testEnterAssessment_EmptyAssessment();
+        test.printTestSeparator();
+
+        // Tests for initMedicalPrescriptionEdition
+        System.out.println(">>> Testing initMedicalPrescriptionEdition()");
+        test.testInitPrescriptionEdition_Success();
+        test.testInitPrescriptionEdition_NoRevisionInitialized();
+        test.printTestSeparator();
+
+        System.out.println("\n" + "=".repeat(70));
+        System.out.println("TEST EXECUTION COMPLETED");
+        System.out.println("=".repeat(70) + "\n");
+    }
 }
