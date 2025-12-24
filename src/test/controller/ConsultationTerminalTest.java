@@ -357,4 +357,55 @@ public class ConsultationTerminalTest {
 
         printTestResult("enterAssessment - IllegalArgumentException for empty assessment", passed);
     }
+
+    // ========== TESTS FOR initMedicalPrescriptionEdition ==========
+
+    /**
+     * Test: initMedicalPrescriptionEdition should activate edition mode.
+     */
+    public void testInitPrescriptionEdition_Success() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+
+            // Act
+            terminal.initMedicalPrescriptionEdition();
+
+            // Assert
+            if (terminal.isPrescriptionEditionMode()) {
+                passed = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+        }
+
+        printTestResult("initPrescriptionEdition - Success scenario", passed);
+    }
+
+    /**
+     * Test: initPrescriptionEdition without revision should throw ProceduralException.
+     */
+    public void testInitPrescriptionEdition_NoRevisionInitialized() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange - NO initRevision called
+
+            // Act
+            terminal.initMedicalPrescriptionEdition();
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("initPrescriptionEdition - ProceduralException when revision not initialized", passed);
+    }
 }
