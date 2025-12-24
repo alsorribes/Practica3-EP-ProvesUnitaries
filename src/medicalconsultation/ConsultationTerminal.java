@@ -403,6 +403,59 @@ public class ConsultationTerminal {
         currentPrescription.removeLine(prodID);
     }
 
+    /**
+     * Doctor enters the treatment ending date.
+     * Sets both the prescription date (current date) and ending date.
+     *
+     * CONTRACT:
+     * - Preconditions: Prescription edition mode must be active
+     * - Postconditions:
+     *   * MedicalPrescription.prescDate set to current date
+     *   * MedicalPrescription.endDate set to provided date
+     *
+     * @param date the treatment ending date
+     * @throws IncorrectEndingDateException if date is invalid (past, current, or too close)
+     * @throws ProceduralException if prescription edition not active
+     */
+    public void enterTreatmentEndingDate(Date date)
+            throws IncorrectEndingDateException, ProceduralException {
+
+        // Check precondition: prescription edition mode must be active
+        if (!prescriptionEditionMode) {
+            throw new ProceduralException(
+                    "Cannot set ending date: prescription edition not initialized");
+        }
+
+        // Validate input parameter
+        if (date == null) {
+            throw new IllegalArgumentException("Ending date cannot be null");
+        }
+
+        // Validate that ending date is appropriate
+        Date currentDate = new Date();
+
+        // Check if date is in the past or equal to current date
+        if (date.before(currentDate) || date.equals(currentDate)) {
+            throw new IncorrectEndingDateException(
+                    "Ending date cannot be in the past or equal to current date");
+        }
+
+        // Check if date is too close (less than 1 day ahead)
+        long diffInMillis = date.getTime() - currentDate.getTime();
+        long diffInDays = diffInMillis / (1000 * 60 * 60 * 24);
+
+        if (diffInDays < 1) {
+            throw new IncorrectEndingDateException(
+                    "Ending date is too close to current date (minimum 1 day required)");
+        }
+
+        // Delegate to internal operation
+        setPrescDateAndEndDate(date);
+
+        // Mark treatment dates as set
+        this.treatmentDatesSet = true;
+    }
+
     // ========== INTERNAL OPERATIONS ==========
 
     /**
