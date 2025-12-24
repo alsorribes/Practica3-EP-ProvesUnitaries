@@ -73,4 +73,186 @@ public class ConsultationTerminalTest {
     private void printTestSeparator() {
         System.out.println("\n" + "=".repeat(70) + "\n");
     }
+
+
+    // ========== TESTS FOR initRevision ==========
+
+    /**
+     * Test: initRevision with valid parameters should succeed.
+     * Should download medical history and prescription from HNS.
+     */
+    public void testInitRevision_Success() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+
+            // Act
+            terminal.initRevision(validCip, validIllness);
+
+            // Assert
+            if (terminal.isRevisionInitialized() &&
+                    terminal.getCurrentMedicalHistory() != null &&
+                    terminal.getCurrentPrescription() != null &&
+                    terminal.getCurrentIllness().equals(validIllness)) {
+                passed = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+        }
+
+        printTestResult("initRevision - Success scenario", passed);
+    }
+
+    /**
+     * Test: initRevision with null CIP should throw IllegalArgumentException.
+     */
+    public void testInitRevision_NullCIP() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+
+            // Act
+            terminal.initRevision(null, validIllness);
+
+            // Should not reach here
+
+        } catch (IllegalArgumentException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("initRevision - Null CIP throws IllegalArgumentException", passed);
+    }
+
+    /**
+     * Test: initRevision with null illness should throw IllegalArgumentException.
+     */
+    public void testInitRevision_NullIllness() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+
+            // Act
+            terminal.initRevision(validCip, null);
+
+        } catch (IllegalArgumentException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("initRevision - Null illness throws IllegalArgumentException", passed);
+    }
+
+    /**
+     * Test: initRevision with empty illness should throw IllegalArgumentException.
+     */
+    public void testInitRevision_EmptyIllness() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+
+            // Act
+            terminal.initRevision(validCip, "   ");
+
+        } catch (IllegalArgumentException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("initRevision - Empty illness throws IllegalArgumentException", passed);
+    }
+
+    /**
+     * Test: initRevision with network error should throw ConnectException.
+     */
+    public void testInitRevision_ConnectException() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            HealthNationalServiceStubWithErrors hnsError =
+                    (HealthNationalServiceStubWithErrors) hnsWithErrors;
+            hnsError.setThrowConnectException(true);
+            terminal.setHealthNationalService(hnsError);
+
+            // Act
+            terminal.initRevision(validCip, validIllness);
+
+        } catch (ConnectException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("initRevision - ConnectException on network failure", passed);
+    }
+
+    /**
+     * Test: initRevision with unregistered patient should throw HealthCardIDException.
+     */
+    public void testInitRevision_HealthCardIDException() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            HealthNationalServiceStubWithErrors hnsError =
+                    (HealthNationalServiceStubWithErrors) hnsWithErrors;
+            hnsError.setThrowHealthCardIDException(true);
+            terminal.setHealthNationalService(hnsError);
+
+            // Act
+            terminal.initRevision(validCip, validIllness);
+
+        } catch (HealthCardIDException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("initRevision - HealthCardIDException for unregistered patient", passed);
+    }
+
+    /**
+     * Test: initRevision with no prescription should throw AnyCurrentPrescriptionException.
+     */
+    public void testInitRevision_AnyCurrentPrescriptionException() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            HealthNationalServiceStubWithErrors hnsError =
+                    (HealthNationalServiceStubWithErrors) hnsWithErrors;
+            hnsError.setThrowAnyCurrentPrescriptionException(true);
+            terminal.setHealthNationalService(hnsError);
+
+            // Act
+            terminal.initRevision(validCip, validIllness);
+
+        } catch (AnyCurrentPrescriptionException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("initRevision - AnyCurrentPrescriptionException for missing prescription", passed);
+    }
 }
