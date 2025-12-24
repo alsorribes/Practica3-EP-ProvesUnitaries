@@ -174,4 +174,34 @@ public class ConsultationTerminal {
         // Enter prescription edition mode
         this.prescriptionEditionMode = true;
     }
+
+    // ========== AI-RELATED INPUT EVENTS ==========
+
+    /**
+     * Doctor invokes the Decision Making AI for treatment support.
+     * Initializes the AI system to be ready for receiving prompts.
+     *
+     * CONTRACT:
+     * - Preconditions: Prescription edition mode must be active
+     * - Postconditions: DecisionMakingAI instance ready in memory
+     *
+     * @throws AIException if there's a problem starting the AI system
+     * @throws ProceduralException if prescription edition not active
+     */
+    public void callDecisionMakingAI() throws AIException, ProceduralException {
+
+        // Check precondition: prescription edition mode must be active
+        if (!prescriptionEditionMode) {
+            throw new ProceduralException(
+                    "Cannot call AI: prescription edition not initialized");
+        }
+
+        // Initialize the AI system
+        decisionMakingAI.initDecisionMakingAI();
+
+        // Mark AI as initialized and ready
+        this.aiInitialized = true;
+    }
+
+
 }
