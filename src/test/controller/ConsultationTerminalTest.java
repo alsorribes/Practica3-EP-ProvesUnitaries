@@ -498,6 +498,179 @@ public class ConsultationTerminalTest {
     }
 
 
+    // ========== TESTS FOR askAIForSuggest ==========
+
+    /**
+     * Test: askAIForSuggest should return AI response.
+     */
+    public void testAskAI_Success() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            terminal.callDecisionMakingAI();
+            String prompt = "What adjustments should I make to this treatment?";
+
+            // Act
+            String response = terminal.askAIForSuggest(prompt);
+
+            // Assert
+            if (response != null && !response.isEmpty() &&
+                    terminal.getLastAIResponse() != null) {
+                passed = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+        }
+
+        printTestResult("askAI - Success scenario", passed);
+    }
+
+    /**
+     * Test: askAI without prescription edition should throw ProceduralException.
+     */
+    public void testAskAI_NoPrescriptionEdition() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiSuccess);
+            terminal.initRevision(validCip, validIllness);
+            // NO initMedicalPrescriptionEdition
+
+            // Act
+            terminal.askAIForSuggest("Some prompt");
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("askAI - ProceduralException when prescription edition not active", passed);
+    }
+
+    /**
+     * Test: askAI without AI initialized should throw ProceduralException.
+     */
+    public void testAskAI_AINotInitialized() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            // NO callDecisionMakingAI
+
+            // Act
+            terminal.askAIForSuggest("Some prompt");
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("askAI - ProceduralException when AI not initialized", passed);
+    }
+
+    /**
+     * Test: askAI with null prompt should throw IllegalArgumentException.
+     */
+    public void testAskAI_NullPrompt() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            terminal.callDecisionMakingAI();
+
+            // Act
+            terminal.askAIForSuggest(null);
+
+        } catch (IllegalArgumentException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("askAI - IllegalArgumentException for null prompt", passed);
+    }
+
+    /**
+     * Test: askAI with empty prompt should throw IllegalArgumentException.
+     */
+    public void testAskAI_EmptyPrompt() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            terminal.callDecisionMakingAI();
+
+            // Act
+            terminal.askAIForSuggest("   ");
+
+        } catch (IllegalArgumentException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("askAI - IllegalArgumentException for empty prompt", passed);
+    }
+
+    /**
+     * Test: askAI with bad prompt should throw BadPromptException.
+     */
+    public void testAskAI_BadPromptException() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            DecisionMakingAIStubWithErrors aiError =
+                    (DecisionMakingAIStubWithErrors) aiWithErrors;
+            aiError.setThrowBadPromptException(true);
+
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiError);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            terminal.callDecisionMakingAI();
+
+            // Act
+            terminal.askAIForSuggest("unclear prompt");
+
+        } catch (BadPromptException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("askAI - BadPromptException for unclear prompt", passed);
+    }
+
+
     // ========== MAIN METHOD TO RUN ALL TESTS ==========
 
     public static void main(String[] args) {
