@@ -914,6 +914,136 @@ public class ConsultationTerminalTest {
     }
 
 
+    // ========== TESTS FOR modifyDoseInLine ==========
+
+    /**
+     * Test: modifyDose with valid data should succeed.
+     */
+    public void testModifyDose_Success() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            terminal.enterMedicineWithGuidelines(validProductID, validGuidelines);
+
+            // Act
+            terminal.modifyDoseInLine(validProductID, 3.0f);
+
+            // Assert - should not throw exception
+            passed = true;
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+        }
+
+        printTestResult("modifyDose - Success scenario", passed);
+    }
+
+    /**
+     * Test: modifyDose without prescription edition should throw ProceduralException.
+     */
+    public void testModifyDose_NoPrescriptionEdition() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            // NO initMedicalPrescriptionEdition
+
+            // Act
+            terminal.modifyDoseInLine(validProductID, 3.0f);
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("modifyDose - ProceduralException when prescription edition not active", passed);
+    }
+
+    /**
+     * Test: modifyDose with null ProductID should throw IllegalArgumentException.
+     */
+    public void testModifyDose_NullProductID() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Act
+            terminal.modifyDoseInLine(null, 3.0f);
+
+        } catch (IllegalArgumentException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("modifyDose - IllegalArgumentException for null ProductID", passed);
+    }
+
+    /**
+     * Test: modifyDose with negative dose should throw IllegalArgumentException.
+     */
+    public void testModifyDose_NegativeDose() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Act
+            terminal.modifyDoseInLine(validProductID, -1.0f);
+
+        } catch (IllegalArgumentException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("modifyDose - IllegalArgumentException for negative dose", passed);
+    }
+
+    /**
+     * Test: modifyDose with zero dose should throw IllegalArgumentException.
+     */
+    public void testModifyDose_ZeroDose() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Act
+            terminal.modifyDoseInLine(validProductID, 0.0f);
+
+        } catch (IllegalArgumentException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("modifyDose - IllegalArgumentException for zero dose", passed);
+    }
+
+
     // ========== MAIN METHOD TO RUN ALL TESTS ==========
 
     public static void main(String[] args) {
