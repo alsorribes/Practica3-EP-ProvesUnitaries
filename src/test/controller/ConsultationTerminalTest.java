@@ -1436,6 +1436,184 @@ public class ConsultationTerminalTest {
     }
 
 
+
+    // ========== TESTS FOR sendHistoryAndPrescription ==========
+
+    /**
+     * Test: sendHistoryAndPrescription should successfully transmit and get treatment code.
+     */
+    public void testSendHistoryAndPrescription_Success() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            Date futureDate = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
+            terminal.enterTreatmentEndingDate(futureDate);
+            terminal.stampeeSignature();
+
+            // Act
+            MedicalPrescription result = terminal.sendHistoryAndPrescription();
+
+            // Assert
+            if (result != null && result.getPrescCode() != null) {
+                passed = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+        }
+
+        printTestResult("sendHistoryAndPrescription - Success scenario", passed);
+    }
+
+    /**
+     * Test: sendHistoryAndPrescription without prescription edition should throw ProceduralException.
+     */
+    public void testSendHistoryAndPrescription_NoPrescriptionEdition() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            // NO initMedicalPrescriptionEdition
+
+            // Act
+            terminal.sendHistoryAndPrescription();
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("sendHistoryAndPrescription - ProceduralException when edition not active", passed);
+    }
+
+    /**
+     * Test: sendHistoryAndPrescription without dates should throw ProceduralException.
+     */
+    public void testSendHistoryAndPrescription_DatesNotSet() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            // NO enterTreatmentEndingDate
+
+            // Act
+            terminal.sendHistoryAndPrescription();
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("sendHistoryAndPrescription - ProceduralException when dates not set", passed);
+    }
+
+    /**
+     * Test: sendHistoryAndPrescription without signature should throw ProceduralException.
+     */
+    public void testSendHistoryAndPrescription_SignatureNotStamped() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            Date futureDate = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
+            terminal.enterTreatmentEndingDate(futureDate);
+            // NO stampeeSignature
+
+            // Act
+            terminal.sendHistoryAndPrescription();
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("sendHistoryAndPrescription - ProceduralException when signature not stamped", passed);
+    }
+
+    /**
+     * Test: sendHistoryAndPrescription with network error should throw ConnectException.
+     */
+    public void testSendHistoryAndPrescription_ConnectException() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            HealthNationalServiceStubWithErrors hnsError =
+                    (HealthNationalServiceStubWithErrors) hnsWithErrors;
+            hnsError.setThrowConnectException(true);
+
+            terminal.setHealthNationalService(hnsError);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            Date futureDate = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
+            terminal.enterTreatmentEndingDate(futureDate);
+            terminal.stampeeSignature();
+
+            // Act
+            terminal.sendHistoryAndPrescription();
+
+        } catch (ConnectException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("sendHistoryAndPrescription - ConnectException on network failure", passed);
+    }
+
+    /**
+     * Test: sendHistoryAndPrescription with incomplete prescription should throw NotCompletedMedicalPrescriptionException.
+     */
+    public void testSendHistoryAndPrescription_NotCompletedException() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            HealthNationalServiceStubWithErrors hnsError =
+                    (HealthNationalServiceStubWithErrors) hnsWithErrors;
+            hnsError.setThrowNotCompletedPrescriptionException(true);
+
+            terminal.setHealthNationalService(hnsError);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            Date futureDate = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
+            terminal.enterTreatmentEndingDate(futureDate);
+            terminal.stampeeSignature();
+
+            // Act
+            terminal.sendHistoryAndPrescription();
+
+        } catch (NotCompletedMedicalPrescriptionException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("sendHistoryAndPrescription - NotCompletedMedicalPrescriptionException", passed);
+    }
+
+
     // ========== MAIN METHOD TO RUN ALL TESTS ==========
 
     public static void main(String[] args) {
