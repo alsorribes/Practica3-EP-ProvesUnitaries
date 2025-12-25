@@ -759,6 +759,161 @@ public class ConsultationTerminalTest {
     }
 
 
+    // ========== TESTS FOR enterMedicineWithGuidelines ==========
+
+    /**
+     * Test: enterMedicine with valid data should add prescription line.
+     */
+    public void testEnterMedicine_Success() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Act
+            terminal.enterMedicineWithGuidelines(validProductID, validGuidelines);
+
+            // Assert - should not throw exception
+            passed = true;
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+        }
+
+        printTestResult("enterMedicine - Success scenario", passed);
+    }
+
+    /**
+     * Test: enterMedicine without prescription edition should throw ProceduralException.
+     */
+    public void testEnterMedicine_NoPrescriptionEdition() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            // NO initMedicalPrescriptionEdition
+
+            // Act
+            terminal.enterMedicineWithGuidelines(validProductID, validGuidelines);
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("enterMedicine - ProceduralException when prescription edition not active", passed);
+    }
+
+    /**
+     * Test: enterMedicine with null ProductID should throw IllegalArgumentException.
+     */
+    public void testEnterMedicine_NullProductID() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Act
+            terminal.enterMedicineWithGuidelines(null, validGuidelines);
+
+        } catch (IllegalArgumentException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("enterMedicine - IllegalArgumentException for null ProductID", passed);
+    }
+
+    /**
+     * Test: enterMedicine with null guidelines should throw IncorrectTakingGuidelinesException.
+     */
+    public void testEnterMedicine_NullGuidelines() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Act
+            terminal.enterMedicineWithGuidelines(validProductID, null);
+
+        } catch (IncorrectTakingGuidelinesException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("enterMedicine - IncorrectTakingGuidelinesException for null guidelines", passed);
+    }
+
+    /**
+     * Test: enterMedicine with empty guidelines should throw IncorrectTakingGuidelinesException.
+     */
+    public void testEnterMedicine_EmptyGuidelines() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Act
+            terminal.enterMedicineWithGuidelines(validProductID, new String[]{});
+
+        } catch (IncorrectTakingGuidelinesException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("enterMedicine - IncorrectTakingGuidelinesException for empty guidelines", passed);
+    }
+
+    /**
+     * Test: enterMedicine with insufficient guidelines should throw IncorrectTakingGuidelinesException.
+     */
+    public void testEnterMedicine_InsufficientGuidelines() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            String[] insufficientGuidelines = {"BEFORELUNCH", "15"}; // Only 2 elements, need at least 5
+
+            // Act
+            terminal.enterMedicineWithGuidelines(validProductID, insufficientGuidelines);
+
+        } catch (IncorrectTakingGuidelinesException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("enterMedicine - IncorrectTakingGuidelinesException for insufficient guidelines", passed);
+    }
+
+
     // ========== MAIN METHOD TO RUN ALL TESTS ==========
 
     public static void main(String[] args) {
