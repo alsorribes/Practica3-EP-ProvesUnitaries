@@ -951,7 +951,6 @@ class ConsultationTerminalTest {
 
         Date futureDate = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
         terminal.enterTreatmentEndingDate(futureDate);
-        terminal.finishMedicalPrescriptionEdition();
         terminal.stampeeSignature();
 
         MedicalPrescription result = terminal.sendHistoryAndPrescription();
@@ -985,7 +984,6 @@ class ConsultationTerminalTest {
 
         Date futureDate = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
         terminal.enterTreatmentEndingDate(futureDate);
-        terminal.finishMedicalPrescriptionEdition();
         terminal.stampeeSignature();
 
         MedicalPrescription result = terminal.sendHistoryAndPrescription();
