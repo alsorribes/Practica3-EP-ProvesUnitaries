@@ -1295,6 +1295,62 @@ public class ConsultationTerminalTest {
     }
 
 
+    // ========== TESTS FOR finishMedicalPrescriptionEdition ==========
+
+    /**
+     * Test: finishMedicalPrescriptionEdition should deactivate edition mode.
+     */
+    public void testFinishPrescriptionEdition_Success() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Act
+            terminal.finishMedicalPrescriptionEdition();
+
+            // Assert
+            if (!terminal.isPrescriptionEditionMode()) {
+                passed = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+        }
+
+        printTestResult("finishPrescriptionEdition - Success scenario", passed);
+    }
+
+    /**
+     * Test: finishPrescriptionEdition without active edition should throw ProceduralException.
+     */
+    public void testFinishPrescriptionEdition_NotActive() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            // NO initMedicalPrescriptionEdition
+
+            // Act
+            terminal.finishMedicalPrescriptionEdition();
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("finishPrescriptionEdition - ProceduralException when edition not active", passed);
+    }
+
+
     // ========== MAIN METHOD TO RUN ALL TESTS ==========
 
     public static void main(String[] args) {
