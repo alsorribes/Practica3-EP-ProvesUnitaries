@@ -894,7 +894,6 @@ class ConsultationTerminalTest {
         // Arrange
         HealthNationalServiceStubWithErrors hnsError =
                 (HealthNationalServiceStubWithErrors) hnsWithErrors;
-        hnsError.setThrowConnectException(true);
 
         terminal.setHealthNationalService(hnsError);
         terminal.initRevision(validCip, validIllness);
@@ -902,6 +901,9 @@ class ConsultationTerminalTest {
         Date futureDate = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
         terminal.enterTreatmentEndingDate(futureDate);
         terminal.stampeeSignature();
+
+        // NOW activate the error flag ONLY for sendHistoryAndPrescription
+        hnsError.setThrowConnectException(true);
 
         // Act & Assert
         assertThrows(ConnectException.class, () -> {
