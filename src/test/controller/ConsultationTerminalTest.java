@@ -410,6 +410,94 @@ public class ConsultationTerminalTest {
     }
 
 
+    // ========== TESTS FOR callDecisionMakingAI ==========
+
+    /**
+     * Test: callDecisionMakingAI should successfully initialize AI.
+     */
+    public void testCallAI_Success() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Act
+            terminal.callDecisionMakingAI();
+
+            // Assert
+            if (terminal.isAiInitialized()) {
+                passed = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+        }
+
+        printTestResult("callAI - Success scenario", passed);
+    }
+
+    /**
+     * Test: callAI without prescription edition should throw ProceduralException.
+     */
+    public void testCallAI_NoPrescriptionEdition() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiSuccess);
+            terminal.initRevision(validCip, validIllness);
+            // NO initMedicalPrescriptionEdition called
+
+            // Act
+            terminal.callDecisionMakingAI();
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("callAI - ProceduralException when prescription edition not active", passed);
+    }
+
+    /**
+     * Test: callAI with AI error should throw AIException.
+     */
+    public void testCallAI_AIException() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            DecisionMakingAIStubWithErrors aiError =
+                    (DecisionMakingAIStubWithErrors) aiWithErrors;
+            aiError.setThrowAIException(true);
+
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiError);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Act
+            terminal.callDecisionMakingAI();
+
+        } catch (AIException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("callAI - AIException on AI initialization failure", passed);
+    }
+
+
     // ========== MAIN METHOD TO RUN ALL TESTS ==========
 
     public static void main(String[] args) {
