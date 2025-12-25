@@ -1874,12 +1874,14 @@ public class ConsultationTerminalTest {
     public static void main(String[] args) {
         ConsultationTerminalTest test = new ConsultationTerminalTest();
 
+        int totalTests = 0;
+
         System.out.println("\n" + "=".repeat(70));
-        System.out.println("RUNNING CONSULTATION TERMINAL UNIT TESTS");
+        System.out.println("RUNNING CONSULTATION TERMINAL COMPREHENSIVE UNIT TESTS");
         System.out.println("=".repeat(70) + "\n");
 
         // Tests for initRevision
-        System.out.println(">>> Testing initRevision()");
+        System.out.println(">>> Testing initRevision() - 7 tests");
         test.testInitRevision_Success();
         test.testInitRevision_NullCIP();
         test.testInitRevision_NullIllness();
@@ -1887,24 +1889,125 @@ public class ConsultationTerminalTest {
         test.testInitRevision_ConnectException();
         test.testInitRevision_HealthCardIDException();
         test.testInitRevision_AnyCurrentPrescriptionException();
+        totalTests += 7;
         test.printTestSeparator();
 
         // Tests for enterMedicalAssessmentInHistory
-        System.out.println(">>> Testing enterMedicalAssessmentInHistory()");
+        System.out.println(">>> Testing enterMedicalAssessmentInHistory() - 4 tests");
         test.testEnterAssessment_Success();
         test.testEnterAssessment_NoRevisionInitialized();
         test.testEnterAssessment_NullAssessment();
         test.testEnterAssessment_EmptyAssessment();
+        totalTests += 4;
         test.printTestSeparator();
 
         // Tests for initMedicalPrescriptionEdition
-        System.out.println(">>> Testing initMedicalPrescriptionEdition()");
+        System.out.println(">>> Testing initMedicalPrescriptionEdition() - 2 tests");
         test.testInitPrescriptionEdition_Success();
         test.testInitPrescriptionEdition_NoRevisionInitialized();
+        totalTests += 2;
+        test.printTestSeparator();
+
+        // Tests for AI events
+        System.out.println(">>> Testing callDecisionMakingAI() - 3 tests");
+        test.testCallAI_Success();
+        test.testCallAI_NoPrescriptionEdition();
+        test.testCallAI_AIException();
+        totalTests += 3;
+        test.printTestSeparator();
+
+        System.out.println(">>> Testing askAIForSuggest() - 6 tests");
+        test.testAskAI_Success();
+        test.testAskAI_NoPrescriptionEdition();
+        test.testAskAI_AINotInitialized();
+        test.testAskAI_NullPrompt();
+        test.testAskAI_EmptyPrompt();
+        test.testAskAI_BadPromptException();
+        totalTests += 6;
+        test.printTestSeparator();
+
+        System.out.println(">>> Testing extractGuidelinesFromSugg() - 3 tests");
+        test.testExtractGuidelines_Success();
+        test.testExtractGuidelines_NoPrescriptionEdition();
+        test.testExtractGuidelines_NoAIResponse();
+        totalTests += 3;
+        test.printTestSeparator();
+
+        // Tests for prescription editing
+        System.out.println(">>> Testing enterMedicineWithGuidelines() - 6 tests");
+        test.testEnterMedicine_Success();
+        test.testEnterMedicine_NoPrescriptionEdition();
+        test.testEnterMedicine_NullProductID();
+        test.testEnterMedicine_NullGuidelines();
+        test.testEnterMedicine_EmptyGuidelines();
+        test.testEnterMedicine_InsufficientGuidelines();
+        totalTests += 6;
+        test.printTestSeparator();
+
+        System.out.println(">>> Testing modifyDoseInLine() - 5 tests");
+        test.testModifyDose_Success();
+        test.testModifyDose_NoPrescriptionEdition();
+        test.testModifyDose_NullProductID();
+        test.testModifyDose_NegativeDose();
+        test.testModifyDose_ZeroDose();
+        totalTests += 5;
+        test.printTestSeparator();
+
+        System.out.println(">>> Testing removeLine() - 3 tests");
+        test.testRemoveLine_Success();
+        test.testRemoveLine_NoPrescriptionEdition();
+        test.testRemoveLine_NullProductID();
+        totalTests += 3;
+        test.printTestSeparator();
+
+        // Tests for final workflow events
+        System.out.println(">>> Testing enterTreatmentEndingDate() - 6 tests");
+        test.testEnterEndingDate_Success();
+        test.testEnterEndingDate_NoPrescriptionEdition();
+        test.testEnterEndingDate_NullDate();
+        test.testEnterEndingDate_PastDate();
+        test.testEnterEndingDate_CurrentDate();
+        test.testEnterEndingDate_TooCloseDate();
+        totalTests += 6;
+        test.printTestSeparator();
+
+        System.out.println(">>> Testing finishMedicalPrescriptionEdition() - 2 tests");
+        test.testFinishPrescriptionEdition_Success();
+        test.testFinishPrescriptionEdition_NotActive();
+        totalTests += 2;
+        test.printTestSeparator();
+
+        System.out.println(">>> Testing stampeeSignature() - 3 tests");
+        test.testStampSignature_Success();
+        test.testStampSignature_NoPrescriptionEdition();
+        test.testStampSignature_DatesNotSet();
+        totalTests += 3;
+        test.printTestSeparator();
+
+        System.out.println(">>> Testing sendHistoryAndPrescription() - 6 tests");
+        test.testSendHistoryAndPrescription_Success();
+        test.testSendHistoryAndPrescription_NoPrescriptionEdition();
+        test.testSendHistoryAndPrescription_DatesNotSet();
+        test.testSendHistoryAndPrescription_SignatureNotStamped();
+        test.testSendHistoryAndPrescription_ConnectException();
+        test.testSendHistoryAndPrescription_NotCompletedException();
+        totalTests += 6;
+        test.printTestSeparator();
+
+        // Complete flow tests
+        System.out.println(">>> Testing COMPLETE USE CASE FLOWS - 6 tests");
+        test.testCompleteFlow_SuccessWithoutAI();
+        test.testCompleteFlow_SuccessWithAI();
+        test.testCompleteFlow_FailAtInitRevision();
+        test.testCompleteFlow_FailMissingSignature();
+        test.testCompleteFlow_FailInvalidDate();
+        test.testCompleteFlow_FailAIBadPrompt();
+        totalTests += 6;
         test.printTestSeparator();
 
         System.out.println("\n" + "=".repeat(70));
         System.out.println("TEST EXECUTION COMPLETED");
+        System.out.println("Total test cases executed: " + totalTests);
         System.out.println("=".repeat(70) + "\n");
     }
 }
