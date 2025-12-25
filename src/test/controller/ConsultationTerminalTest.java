@@ -1351,6 +1351,91 @@ public class ConsultationTerminalTest {
     }
 
 
+    // ========== TESTS FOR stampeeSignature ==========
+
+    /**
+     * Test: stampeeSignature should add digital signature to prescription.
+     */
+    public void testStampSignature_Success() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            Date futureDate = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
+            terminal.enterTreatmentEndingDate(futureDate);
+
+            // Act
+            terminal.stampeeSignature();
+
+            // Assert
+            if (terminal.isSignatureStamped() &&
+                    terminal.getCurrentPrescription().geteSign() != null) {
+                passed = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+        }
+
+        printTestResult("stampSignature - Success scenario", passed);
+    }
+
+    /**
+     * Test: stampSignature without prescription edition should throw ProceduralException.
+     */
+    public void testStampSignature_NoPrescriptionEdition() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            // NO initMedicalPrescriptionEdition
+
+            // Act
+            terminal.stampeeSignature();
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("stampSignature - ProceduralException when prescription edition not active", passed);
+    }
+
+    /**
+     * Test: stampSignature without dates set should throw ProceduralException.
+     */
+    public void testStampSignature_DatesNotSet() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            // NO enterTreatmentEndingDate
+
+            // Act
+            terminal.stampeeSignature();
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("stampSignature - ProceduralException when dates not set", passed);
+    }
+
+
     // ========== MAIN METHOD TO RUN ALL TESTS ==========
 
     public static void main(String[] args) {
