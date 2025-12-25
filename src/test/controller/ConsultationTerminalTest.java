@@ -671,6 +671,94 @@ public class ConsultationTerminalTest {
     }
 
 
+    // ========== TESTS FOR extractGuidelinesFromSugg ==========
+
+    /**
+     * Test: extractGuidelines should parse AI response into suggestions.
+     */
+    public void testExtractGuidelines_Success() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            terminal.callDecisionMakingAI();
+            terminal.askAIForSuggest("Suggest adjustments");
+
+            // Act
+            List<Suggestion> suggestions = terminal.extractGuidelinesFromSugg();
+
+            // Assert
+            if (suggestions != null && !suggestions.isEmpty()) {
+                passed = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+        }
+
+        printTestResult("extractGuidelines - Success scenario", passed);
+    }
+
+    /**
+     * Test: extractGuidelines without prescription edition should throw ProceduralException.
+     */
+    public void testExtractGuidelines_NoPrescriptionEdition() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiSuccess);
+            terminal.initRevision(validCip, validIllness);
+            // NO initMedicalPrescriptionEdition
+
+            // Act
+            terminal.extractGuidelinesFromSugg();
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("extractGuidelines - ProceduralException when prescription edition not active", passed);
+    }
+
+    /**
+     * Test: extractGuidelines without AI response should throw ProceduralException.
+     */
+    public void testExtractGuidelines_NoAIResponse() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            terminal.callDecisionMakingAI();
+            // NO askAIForSuggest called
+
+            // Act
+            terminal.extractGuidelinesFromSugg();
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("extractGuidelines - ProceduralException when AI has not responded", passed);
+    }
+
+
     // ========== MAIN METHOD TO RUN ALL TESTS ==========
 
     public static void main(String[] args) {
