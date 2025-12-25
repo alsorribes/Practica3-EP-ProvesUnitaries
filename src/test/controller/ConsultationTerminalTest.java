@@ -1044,6 +1044,86 @@ public class ConsultationTerminalTest {
     }
 
 
+    // ========== TESTS FOR removeLine ==========
+
+    /**
+     * Test: removeLine with valid ProductID should succeed.
+     */
+    public void testRemoveLine_Success() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            terminal.enterMedicineWithGuidelines(validProductID, validGuidelines);
+
+            // Act
+            terminal.removeLine(validProductID);
+
+            // Assert - should not throw exception
+            passed = true;
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+        }
+
+        printTestResult("removeLine - Success scenario", passed);
+    }
+
+    /**
+     * Test: removeLine without prescription edition should throw ProceduralException.
+     */
+    public void testRemoveLine_NoPrescriptionEdition() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            // NO initMedicalPrescriptionEdition
+
+            // Act
+            terminal.removeLine(validProductID);
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("removeLine - ProceduralException when prescription edition not active", passed);
+    }
+
+    /**
+     * Test: removeLine with null ProductID should throw IllegalArgumentException.
+     */
+    public void testRemoveLine_NullProductID() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Act
+            terminal.removeLine(null);
+
+        } catch (IllegalArgumentException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("removeLine - IllegalArgumentException for null ProductID", passed);
+    }
+
+
     // ========== MAIN METHOD TO RUN ALL TESTS ==========
 
     public static void main(String[] args) {
