@@ -1746,6 +1746,129 @@ public class ConsultationTerminalTest {
     }
 
 
+    /**
+     * Test: Complete flow interrupted by network failure during initialization.
+     */
+    public void testCompleteFlow_FailAtInitRevision() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            HealthNationalServiceStubWithErrors hnsError =
+                    (HealthNationalServiceStubWithErrors) hnsWithErrors;
+            hnsError.setThrowConnectException(true);
+            terminal.setHealthNationalService(hnsError);
+
+            // Act - Should fail at first step
+            terminal.initRevision(validCip, validIllness);
+
+        } catch (ConnectException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("COMPLETE FLOW - Fail at initRevision (network error)", passed);
+    }
+
+    /**
+     * Test: Complete flow interrupted by missing signature before send.
+     */
+    public void testCompleteFlow_FailMissingSignature() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+
+            // Execute partial flow
+            terminal.initRevision(validCip, validIllness);
+            terminal.enterMedicalAssessmentInHistory("Assessment");
+            terminal.initMedicalPrescriptionEdition();
+            terminal.enterMedicineWithGuidelines(validProductID, validGuidelines);
+            Date futureDate = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
+            terminal.enterTreatmentEndingDate(futureDate);
+            terminal.finishMedicalPrescriptionEdition();
+            // SKIP: stampeeSignature()
+
+            // Act - Should fail because signature not stamped
+            terminal.sendHistoryAndPrescription();
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("COMPLETE FLOW - Fail due to missing signature", passed);
+    }
+
+    /**
+     * Test: Complete flow interrupted by invalid ending date.
+     */
+    public void testCompleteFlow_FailInvalidDate() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+
+            // Execute partial flow
+            terminal.initRevision(validCip, validIllness);
+            terminal.enterMedicalAssessmentInHistory("Assessment");
+            terminal.initMedicalPrescriptionEdition();
+            terminal.enterMedicineWithGuidelines(validProductID, validGuidelines);
+
+            // Try to set past date
+            Date pastDate = new Date(System.currentTimeMillis() - (10L * 24 * 60 * 60 * 1000));
+            terminal.enterTreatmentEndingDate(pastDate);
+
+        } catch (IncorrectEndingDateException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("COMPLETE FLOW - Fail due to invalid ending date", passed);
+    }
+
+    /**
+     * Test: Complete flow with AI but bad prompt.
+     */
+    public void testCompleteFlow_FailAIBadPrompt() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            DecisionMakingAIStubWithErrors aiError =
+                    (DecisionMakingAIStubWithErrors) aiWithErrors;
+            aiError.setThrowBadPromptException(true);
+
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiError);
+
+            // Execute partial flow
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+            terminal.callDecisionMakingAI();
+
+            // Act - Should fail with bad prompt
+            terminal.askAIForSuggest("unclear gibberish prompt");
+
+        } catch (BadPromptException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("COMPLETE FLOW - Fail due to bad AI prompt", passed);
+    }
+
+
     // ========== MAIN METHOD TO RUN ALL TESTS ==========
 
     public static void main(String[] args) {
