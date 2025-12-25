@@ -1614,6 +1614,138 @@ public class ConsultationTerminalTest {
     }
 
 
+    // ========== COMPLETE USE CASE FLOW TESTS ==========
+
+    /**
+     * Test: Complete use case flow - Success scenario without AI.
+     * This tests the entire workflow from start to finish.
+     */
+    public void testCompleteFlow_SuccessWithoutAI() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+
+            // Step 1: Initialize revision
+            terminal.initRevision(validCip, validIllness);
+
+            // Step 2: Enter medical assessment
+            terminal.enterMedicalAssessmentInHistory("Patient shows improvement");
+
+            // Step 3: Initialize prescription edition
+            terminal.initMedicalPrescriptionEdition();
+
+            // Step 4: Add a medicine
+            terminal.enterMedicineWithGuidelines(validProductID, validGuidelines);
+
+            // Step 5: Modify dose
+            terminal.modifyDoseInLine(validProductID, 2.0f);
+
+            // Step 6: Add another medicine
+            ProductID secondProduct = new ProductID("640557143200");
+            terminal.enterMedicineWithGuidelines(secondProduct, validGuidelines);
+
+            // Step 7: Remove a medicine
+            terminal.removeLine(secondProduct);
+
+            // Step 8: Enter treatment ending date
+            Date futureDate = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
+            terminal.enterTreatmentEndingDate(futureDate);
+
+            // Step 9: Finish prescription edition
+            terminal.finishMedicalPrescriptionEdition();
+
+            // Step 10: Stamp signature
+            terminal.stampeeSignature();
+
+            // Step 11: Send to HNS
+            MedicalPrescription result = terminal.sendHistoryAndPrescription();
+
+            // Assert
+            if (result != null &&
+                    result.getPrescCode() != null &&
+                    result.geteSign() != null &&
+                    result.getPrescDate() != null &&
+                    result.getEndDate() != null) {
+                passed = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        printTestResult("COMPLETE FLOW - Success without AI", passed);
+    }
+
+    /**
+     * Test: Complete use case flow with AI - Success scenario.
+     * This includes AI consultation in the workflow.
+     */
+    public void testCompleteFlow_SuccessWithAI() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.setDecisionMakingAI(aiSuccess);
+
+            // Step 1: Initialize revision
+            terminal.initRevision(validCip, validIllness);
+
+            // Step 2: Enter medical assessment
+            terminal.enterMedicalAssessmentInHistory("Patient requires treatment adjustment");
+
+            // Step 3: Initialize prescription edition
+            terminal.initMedicalPrescriptionEdition();
+
+            // Step 4: Call AI for decision support
+            terminal.callDecisionMakingAI();
+
+            // Step 5: Ask AI for suggestions
+            String aiResponse = terminal.askAIForSuggest(
+                    "What adjustments should I make to this diabetes treatment?");
+
+            // Step 6: Extract structured guidelines from AI
+            List<Suggestion> suggestions = terminal.extractGuidelinesFromSugg();
+
+            // Step 7: Apply AI suggestions (simulated)
+            // In real scenario, doctor would review and apply suggestions manually
+            terminal.enterMedicineWithGuidelines(validProductID, validGuidelines);
+
+            // Step 8: Enter treatment ending date
+            Date futureDate = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
+            terminal.enterTreatmentEndingDate(futureDate);
+
+            // Step 9: Finish prescription edition
+            terminal.finishMedicalPrescriptionEdition();
+
+            // Step 10: Stamp signature
+            terminal.stampeeSignature();
+
+            // Step 11: Send to HNS
+            MedicalPrescription result = terminal.sendHistoryAndPrescription();
+
+            // Assert
+            if (result != null &&
+                    result.getPrescCode() != null &&
+                    aiResponse != null &&
+                    suggestions != null && !suggestions.isEmpty()) {
+                passed = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        printTestResult("COMPLETE FLOW - Success with AI consultation", passed);
+    }
+
+
     // ========== MAIN METHOD TO RUN ALL TESTS ==========
 
     public static void main(String[] args) {
