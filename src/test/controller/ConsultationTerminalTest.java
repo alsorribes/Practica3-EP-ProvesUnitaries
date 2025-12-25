@@ -1124,6 +1124,177 @@ public class ConsultationTerminalTest {
     }
 
 
+    // ========== TESTS FOR enterTreatmentEndingDate ==========
+
+    /**
+     * Test: enterTreatmentEndingDate with valid future date should succeed.
+     */
+    public void testEnterEndingDate_Success() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Create a date 30 days in the future
+            Date futureDate = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
+
+            // Act
+            terminal.enterTreatmentEndingDate(futureDate);
+
+            // Assert
+            if (terminal.isTreatmentDatesSet() &&
+                    terminal.getCurrentPrescription().getPrescDate() != null &&
+                    terminal.getCurrentPrescription().getEndDate() != null) {
+                passed = true;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Unexpected exception: " + e.getMessage());
+        }
+
+        printTestResult("enterEndingDate - Success with valid future date", passed);
+    }
+
+    /**
+     * Test: enterEndingDate without prescription edition should throw ProceduralException.
+     */
+    public void testEnterEndingDate_NoPrescriptionEdition() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            // NO initMedicalPrescriptionEdition
+            Date futureDate = new Date(System.currentTimeMillis() + (30L * 24 * 60 * 60 * 1000));
+
+            // Act
+            terminal.enterTreatmentEndingDate(futureDate);
+
+        } catch (ProceduralException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("enterEndingDate - ProceduralException when prescription edition not active", passed);
+    }
+
+    /**
+     * Test: enterEndingDate with null date should throw IllegalArgumentException.
+     */
+    public void testEnterEndingDate_NullDate() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Act
+            terminal.enterTreatmentEndingDate(null);
+
+        } catch (IllegalArgumentException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("enterEndingDate - IllegalArgumentException for null date", passed);
+    }
+
+    /**
+     * Test: enterEndingDate with past date should throw IncorrectEndingDateException.
+     */
+    public void testEnterEndingDate_PastDate() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Create a date in the past
+            Date pastDate = new Date(System.currentTimeMillis() - (10L * 24 * 60 * 60 * 1000));
+
+            // Act
+            terminal.enterTreatmentEndingDate(pastDate);
+
+        } catch (IncorrectEndingDateException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("enterEndingDate - IncorrectEndingDateException for past date", passed);
+    }
+
+    /**
+     * Test: enterEndingDate with current date should throw IncorrectEndingDateException.
+     */
+    public void testEnterEndingDate_CurrentDate() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Current date
+            Date currentDate = new Date();
+
+            // Act
+            terminal.enterTreatmentEndingDate(currentDate);
+
+        } catch (IncorrectEndingDateException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("enterEndingDate - IncorrectEndingDateException for current date", passed);
+    }
+
+    /**
+     * Test: enterEndingDate with too close date should throw IncorrectEndingDateException.
+     */
+    public void testEnterEndingDate_TooCloseDate() {
+        setUp();
+        boolean passed = false;
+
+        try {
+            // Arrange
+            terminal.setHealthNationalService(hnsSuccess);
+            terminal.initRevision(validCip, validIllness);
+            terminal.initMedicalPrescriptionEdition();
+
+            // Date only 12 hours in future (less than 1 day)
+            Date tooCloseDate = new Date(System.currentTimeMillis() + (12L * 60 * 60 * 1000));
+
+            // Act
+            terminal.enterTreatmentEndingDate(tooCloseDate);
+
+        } catch (IncorrectEndingDateException e) {
+            passed = true; // Expected exception
+        } catch (Exception e) {
+            System.out.println("Wrong exception type: " + e.getClass().getName());
+        }
+
+        printTestResult("enterEndingDate - IncorrectEndingDateException for too close date", passed);
+    }
+
+
     // ========== MAIN METHOD TO RUN ALL TESTS ==========
 
     public static void main(String[] args) {
