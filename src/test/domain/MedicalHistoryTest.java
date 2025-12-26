@@ -26,4 +26,12 @@ public class MedicalHistoryTest {
             new MedicalHistory(null, 12345);
         });
     }
+
+    @Test
+    public void testConstructorWithNegativeMemberShipNumThrowsException() throws HealthCardIDException {
+        HealthCardID cip = new HealthCardID("1234567890ABCDEF");
+        assertThrows(IncorrectParametersException.class, () -> {
+            new MedicalHistory(cip, -1);
+        });
+    }
 }
