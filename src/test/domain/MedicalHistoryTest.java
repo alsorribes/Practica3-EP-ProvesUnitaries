@@ -19,4 +19,11 @@ public class MedicalHistoryTest {
         assertEquals(12345, medicalHistory.getMembShipNumb());
         assertEquals("", medicalHistory.getHistory());
     }
+
+    @Test
+    public void testConstructorWithNullCIPThrowsException() {
+        assertThrows(IncorrectParametersException.class, () -> {
+            new MedicalHistory(null, 12345);
+        });
+    }
 }
