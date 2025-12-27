@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * Unit tests for HealthCardID value object.
@@ -45,5 +46,15 @@ public class HealthCardIDTest {
         HealthCardID id2 = new HealthCardID("ABC123");
 
         assertEquals(id1, id2);
+    }
+
+
+    @Test
+    @DisplayName("equals - Different values are not equal")
+    void testEqualsDifferentValue(){
+        HealthCardID id1 = new HealthCardID("ABC123");
+        HealthCardID id2 = new HealthCardID("ZYX987");
+
+        assertNotEquals(id1, id2);
     }
 }
