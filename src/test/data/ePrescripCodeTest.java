@@ -86,4 +86,14 @@ public class ePrescripCodeTest {
         assertEquals(code1.hashCode(), code2.hashCode());
     }
 
+
+    @Test
+    @DisplayName("hashCode - Different values produce different hash codes")
+    void testHashCodeDifferentValue() {
+        ePrescripCode code1 = new ePrescripCode("EP-123");
+        ePrescripCode code2 = new ePrescripCode("EP-987");
+
+        assertNotEquals(code1.hashCode(), code2.hashCode());
+    }
+
 }
