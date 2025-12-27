@@ -64,4 +64,14 @@ public class ProductIDTest {
 
         assertNotEquals(productID, null);
     }
+
+
+    @Test
+    @DisplayName("equals - Compared with different class returns false")
+    void testEqualsDifferentClass() {
+        ProductID productID = new ProductID("ABC123");
+        String other = "ABC123";
+
+        assertNotEquals(productID, other);
+    }
 }
