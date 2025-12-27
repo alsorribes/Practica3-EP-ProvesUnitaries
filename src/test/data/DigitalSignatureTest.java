@@ -136,4 +136,19 @@ public class DigitalSignatureTest {
 
         assertDoesNotThrow(signature::hashCode);
     }
+
+
+    // ----------------- TOSTRING --------------------
+    @Test
+    @DisplayName("toString contains class name and signature values")
+    void testToString() {
+        DigitalSignature signature = new DigitalSignature(new byte[]{1, 2, 3});
+
+        String text = signature.toString();
+
+        assertTrue(text.contains("DigitalSignature"));
+        assertTrue(text.contains("1"));
+        assertTrue(text.contains("2"));
+        assertTrue(text.contains("3"));
+    }
 }
