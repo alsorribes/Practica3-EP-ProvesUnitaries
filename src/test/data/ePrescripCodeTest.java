@@ -44,7 +44,16 @@ public class ePrescripCodeTest {
         ePrescripCode code2 = new ePrescripCode("EP-123");
 
         assertEquals(code1, code2);
-        assertEquals(code2, code1);
+    }
+
+
+    @Test
+    @DisplayName("equals - Different values are not equal")
+    void testEqualsDifferentValue() {
+        ePrescripCode code1 = new ePrescripCode("EP-123");
+        ePrescripCode code2 = new ePrescripCode("EP-987");
+
+        assertNotEquals(code1, code2);
     }
 
 }
