@@ -106,4 +106,15 @@ public class DigitalSignatureTest {
 
         assertEquals(sig1, sig2);
     }
+
+
+    // ----------------- HASHCODE CONTRACT ---------------
+    @Test
+    @DisplayName("hashCode - Same content produces same hash code")
+    void testHashCodeSameContent() {
+        DigitalSignature sig1 = new DigitalSignature(new byte[]{1, 2, 3});
+        DigitalSignature sig2 = new DigitalSignature(new byte[]{1, 2, 3});
+
+        assertEquals(sig1.hashCode(), sig2.hashCode());
+    }
 }
