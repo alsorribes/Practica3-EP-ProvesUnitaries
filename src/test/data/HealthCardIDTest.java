@@ -57,4 +57,13 @@ public class HealthCardIDTest {
 
         assertNotEquals(id1, id2);
     }
+
+
+    @Test
+    @DisplayName("equals - Compared with null returns false")
+    void testEqualsNull(){
+        HealthCardID id = new HealthCardID("ABC123");
+
+        assertNotEquals(id, null);
+    }
 }
