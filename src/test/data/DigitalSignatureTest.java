@@ -25,4 +25,17 @@ public class DigitalSignatureTest {
 
         assertArrayEquals(new byte[]{1, 2, 3}, signature.getSignature());
     }
+
+
+    @Test
+    @DisplayName("getSignature returns a defensive copy")
+    void testGetterReturnsCopy() {
+        byte[] original = {4, 5, 6};
+        DigitalSignature signature = new DigitalSignature(original);
+
+        byte[] obtained = signature.getSignature();
+        obtained[0] = 9;
+
+        assertArrayEquals(new byte[]{4, 5, 6}, signature.getSignature());
+    }
 }
