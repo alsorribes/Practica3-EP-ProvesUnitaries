@@ -36,4 +36,13 @@ public class ProductIDTest {
         assertEquals(productID, productID);
     }
 
+
+    @Test
+    @DisplayName("equals - Different objects with same value are equal")
+    void testEqualsSameValue() {
+        ProductID id1 = new ProductID("ABC123");
+        ProductID id2 = new ProductID("ABC123");
+
+        assertEquals(id1, id2);
+    }
 }
