@@ -3,6 +3,7 @@ package test.data;
 import data.HealthCardID;
 
 import exceptions.HealthCardIDException;
+import exceptions.IncorrectParametersException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -116,7 +117,7 @@ public class HealthCardIDTest {
     @DisplayName("Constructor - Throws exception when code is null")
     void testConstructorNullThrowsException() {
         // Assert
-        assertThrows(HealthCardIDException.class, () -> {
+        assertThrows(IncorrectParametersException.class, () -> {
             new HealthCardID(null);
         });
     }
@@ -125,7 +126,7 @@ public class HealthCardIDTest {
     @DisplayName("Constructor - Throws exception when code is empty")
     void testConstructorEmptyThrowsException() {
         // Assert
-        assertThrows(HealthCardIDException.class, () -> {
+        assertThrows(IncorrectParametersException.class, () -> {
             new HealthCardID("");
         });
     }
@@ -135,7 +136,7 @@ public class HealthCardIDTest {
     @DisplayName("Constructor - Throws exception when code is empty")
     void testConstructorWrongFormatThrowsException() {
         // Assert
-        assertThrows(HealthCardIDException.class, () -> {
+        assertThrows(IncorrectParametersException.class, () -> {
             new HealthCardID("12345");
         });
     }

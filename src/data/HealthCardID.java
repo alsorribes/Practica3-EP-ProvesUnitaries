@@ -1,6 +1,6 @@
 package data;
 
-import exceptions.HealthCardIDException;
+import exceptions.IncorrectParametersException;
 
 /**
  * The personal identifying code in the National Health Service.
@@ -8,15 +8,15 @@ import exceptions.HealthCardIDException;
 public final class HealthCardID {
     private final String personalID;
 
-    public HealthCardID(String code) throws HealthCardIDException {
+    public HealthCardID(String code) throws IncorrectParametersException {
         // Validate that code is not null and not empty
         if(code == null || code.trim().isEmpty()){
-            throw new HealthCardIDException("HealthCardID cannot be null or empty.");
+            throw new IncorrectParametersException("HealthCardID cannot be null or empty.");
         }
 
         // Validate that code contains 16 alphanumeric characters
         if(!isValidFormat(code)){
-            throw new HealthCardIDException("HealthCardID has an invalid format: " + code);
+            throw new IncorrectParametersException("HealthCardID has an invalid format: " + code);
         }
 
         this.personalID = code;

@@ -1,6 +1,6 @@
 package data;
 
-import exceptions.InvalidProductIDException;
+import exceptions.IncorrectParametersException;
 
 /**
  * Universal Product Code for medicines.
@@ -8,15 +8,15 @@ import exceptions.InvalidProductIDException;
 public final class ProductID {
     private final String code;
 
-    public ProductID(String code) throws InvalidProductIDException {
+    public ProductID(String code) throws IncorrectParametersException {
         // Validate that code is not null and not empty
         if(code == null || code.trim().isEmpty()){
-            throw new InvalidProductIDException("ProductID cannot be null or empty.");
+            throw new IncorrectParametersException("ProductID cannot be null or empty.");
         }
 
         // Validate that code contains 16 alphanumeric characters
         if(!isValidFormat(code)){
-            throw new InvalidProductIDException("ProductID has an invalid format: " + code);
+            throw new IncorrectParametersException("ProductID has an invalid format: " + code);
         }
 
         this.code = code;
