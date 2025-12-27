@@ -41,4 +41,56 @@ public class TakingGuidelineTest {
         assertEquals(unit, posology.getFreqUnit());
     }
 
+
+    // --------------- SETTERS ----------------
+    @Test
+    @DisplayName("setdMoment updates day moment")
+    void testSetDayMoment() {
+        TakingGuideline guideline = new TakingGuideline(
+                dayMoment.BEFOREBREAKFAST, 5.0f, 250.0f, 2.0f, FqUnit.DAY, "Initial"
+        );
+
+        guideline.setdMoment(dayMoment.AFTERDINNER);
+
+        assertEquals(dayMoment.AFTERDINNER, guideline.getdMoment());
+    }
+
+    @Test
+    @DisplayName("setDuration updates duration")
+    void testSetDuration() {
+        TakingGuideline guideline = new TakingGuideline(
+                dayMoment.BEFOREBREAKFAST, 5.0f, 250.0f, 2.0f, FqUnit.DAY, "Initial"
+        );
+
+        guideline.setDuration(10.0f);
+
+        assertEquals(10.0f, guideline.getDuration());
+    }
+
+    @Test
+    @DisplayName("setPosology updates posology")
+    void testSetPosology() {
+        TakingGuideline guideline = new TakingGuideline(
+                dayMoment.BEFOREBREAKFAST, 5.0f, 250.0f, 2.0f, FqUnit.DAY, "Initial"
+        );
+
+        Posology newPosology = new Posology(100.0f, 1.0f, FqUnit.HOUR);
+
+        guideline.setPosology(newPosology);
+
+        assertEquals(newPosology, guideline.getPosology());
+    }
+
+    @Test
+    @DisplayName("setInstructions updates instructions")
+    void testSetInstructions() {
+        TakingGuideline guideline = new TakingGuideline(
+                dayMoment.BEFOREBREAKFAST, 5.0f, 250.0f, 2.0f, FqUnit.DAY, "Initial"
+        );
+
+        guideline.setInstructions("Take before sleeping");
+
+        assertEquals("Take before sleeping", guideline.getInstructions());
+    }
+
 }
