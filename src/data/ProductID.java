@@ -1,7 +1,6 @@
 package data;
 
 /**
- * TEMPORARY -
  * Universal Product Code for medicines.
  */
 public final class ProductID {

@@ -1,7 +1,6 @@
 package data;
 
 /**
- * TEMPORARY -
  * The electronic prescription code.
  */
 public final class ePrescripCode {

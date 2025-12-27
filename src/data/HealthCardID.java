@@ -1,7 +1,6 @@
 package data;
 
 /**
- * TEMPORARY -
  * The personal identifying code in the National Health Service.
  */
 public final class HealthCardID {

@@ -3,7 +3,6 @@ package data;
 import java.util.Arrays;
 
 /**
- * TEMPORARY -
  * The digital signature of the doctor.
  */
 public final class DigitalSignature {
