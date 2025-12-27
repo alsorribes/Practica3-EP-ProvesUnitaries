@@ -28,4 +28,18 @@ public class SuggestionTest {
         assertEquals(productID, suggestion.getProductID());
         assertArrayEquals(guidelines, suggestion.getGuidelines());
     }
+
+
+    @Test
+    @DisplayName("Constructor without guidelines sets guidelines to null")
+    void testConstructorWithoutGuidelines() {
+        Action action = Action.ELIMINATE;
+        ProductID productID = new ProductID("MED-002");
+
+        Suggestion suggestion = new Suggestion(action, productID);
+
+        assertEquals(action, suggestion.getAction());
+        assertEquals(productID, suggestion.getProductID());
+        assertNull(suggestion.getGuidelines());
+    }
 }
