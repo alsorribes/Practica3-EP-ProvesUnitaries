@@ -151,4 +151,16 @@ public class DigitalSignatureTest {
         assertTrue(text.contains("2"));
         assertTrue(text.contains("3"));
     }
+
+
+    @Test
+    @DisplayName("toString handles null signature")
+    void testToStringNull() {
+        DigitalSignature signature = new DigitalSignature(null);
+
+        String text = signature.toString();
+
+        assertTrue(text.contains("DigitalSignature"));
+        assertTrue(text.contains("null"));
+    }
 }
