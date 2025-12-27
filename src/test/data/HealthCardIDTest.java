@@ -19,7 +19,7 @@ public class HealthCardIDTest {
     // ----------- CONSTRUCTOR AND GETTERS --------------
     @Test
     @DisplayName("Constructor - Stores personal ID correctly")
-    void testContructorStoresPersonalID() throws HealthCardIDException {
+    void testContructorStoresPersonalID() throws IncorrectParametersException {
         // Arrange
         String code = "abcdeFGHIJ123456";
 
@@ -34,7 +34,7 @@ public class HealthCardIDTest {
     // ------------ EQUALS CONTRACTS -----------
     @Test
     @DisplayName("equals - Same object returns true")
-    void testEqualsSameObject() throws HealthCardIDException {
+    void testEqualsSameObject() throws IncorrectParametersException {
         HealthCardID id = new HealthCardID("abcdeFGHIJ123456");
 
         assertEquals(id, id);
@@ -42,7 +42,7 @@ public class HealthCardIDTest {
 
     @Test
     @DisplayName("equals - Different object with same value are equal")
-    void testEqualsSameValue() throws HealthCardIDException {
+    void testEqualsSameValue() throws IncorrectParametersException {
         HealthCardID id1 = new HealthCardID("abcdeFGHIJ123456");
         HealthCardID id2 = new HealthCardID("abcdeFGHIJ123456");
 
@@ -52,7 +52,7 @@ public class HealthCardIDTest {
 
     @Test
     @DisplayName("equals - Different values are not equal")
-    void testEqualsDifferentValue() throws HealthCardIDException {
+    void testEqualsDifferentValue() throws IncorrectParametersException {
         HealthCardID id1 = new HealthCardID("abcdeFGHIJ123456");
         HealthCardID id2 = new HealthCardID("654321JIHGFedcba");
 
@@ -62,7 +62,7 @@ public class HealthCardIDTest {
 
     @Test
     @DisplayName("equals - Compared with null returns false")
-    void testEqualsNull() throws HealthCardIDException {
+    void testEqualsNull() throws IncorrectParametersException {
         HealthCardID id = new HealthCardID("abcdeFGHIJ123456");
 
         assertNotEquals(id, null);
@@ -71,7 +71,7 @@ public class HealthCardIDTest {
 
     @Test
     @DisplayName("equals - Compared with different class returns false")
-    void testEqualsDifferentClass() throws HealthCardIDException {
+    void testEqualsDifferentClass() throws IncorrectParametersException {
         HealthCardID id = new HealthCardID("abcdeFGHIJ123456");
         String other = "abcdeFGHIJ123456";
 
@@ -82,7 +82,7 @@ public class HealthCardIDTest {
     // ------------- HASHCODE CONTRACT --------------------
     @Test
     @DisplayName("hashCode - Same value produces same hash code")
-    void testHashCodeSameValue() throws HealthCardIDException {
+    void testHashCodeSameValue() throws IncorrectParametersException {
         HealthCardID id1 = new HealthCardID("abcdeFGHIJ123456");
         HealthCardID id2 = new HealthCardID("abcdeFGHIJ123456");
 
@@ -91,7 +91,7 @@ public class HealthCardIDTest {
 
     @Test
     @DisplayName("hashCode - Different values produce different hash codes")
-    void testHashCodeDifferentValue() throws HealthCardIDException {
+    void testHashCodeDifferentValue() throws IncorrectParametersException {
         HealthCardID id1 = new HealthCardID("abcdeFGHIJ123456");
         HealthCardID id2 = new HealthCardID("654321JIHGFedcba");
 
@@ -102,7 +102,7 @@ public class HealthCardIDTest {
     // --------- TOSTRING ----------
     @Test
     @DisplayName("toString - Contains class name and personal ID")
-    void testToString() throws HealthCardIDException {
+    void testToString() throws IncorrectParametersException {
         HealthCardID id = new HealthCardID("abcdeFGHIJ123456");
 
         String text = id.toString();
