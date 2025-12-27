@@ -26,4 +26,14 @@ public class ePrescripCodeTest {
         assertEquals(code, prescripCode.getCode());
     }
 
+
+    // ------------ EQUALS CONTRACT -------------
+    @Test
+    @DisplayName("equals - Same object returns true")
+    void testEqualsSameObject() {
+        ePrescripCode code = new ePrescripCode("EP-123");
+
+        assertEquals(code, code);
+    }
+
 }
