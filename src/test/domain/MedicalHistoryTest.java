@@ -46,4 +46,16 @@ public class MedicalHistoryTest {
         medicalHistory.addMedicalHistoryAnnotations("Prescribed medication X");
         assertTrue(medicalHistory.getHistory().contains("Prescribed medication X"));
     }
+
+    @Test
+    public void testSetNewDoctor() throws HealthCardIDException, IncorrectParametersException {
+        HealthCardID cip = new HealthCardID("1234567890ABCDEF");
+        MedicalHistory medicalHistory = new MedicalHistory(cip, 12345);
+
+        assertEquals(12345, medicalHistory.getMembShipNumb());
+
+        medicalHistory.setNewDoctor(67890);
+
+        assertEquals(67890, medicalHistory.getMembShipNumb());
+    }
 }
