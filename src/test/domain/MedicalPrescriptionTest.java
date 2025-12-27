@@ -62,4 +62,18 @@ public class MedicalPrescriptionTest {
             prescription.addLine(productID1, instruc);
         });
     }
+
+    @Test
+    public void testModifyDoseInLineSuccess() throws ProductAlreadyInPrescriptionException, IncorrectTakingGuidelinesException, ProductNotInPrescriptionException {
+        String[] instruc = {"BEFORELUNCH", "15", "1", "1", "DAY", "Take with water", ""};
+        prescription.addLine(productID1, instruc);
+
+        float originalDose = prescription.getLines().get(productID1).getTakingGuideline().getPosology().getDose();
+        assertEquals(1.0f, originalDose);
+
+        prescription.modifyDoseInLine(productID1, 3.0f);
+
+        float modifiedDose = prescription.getLines().get(productID1).getTakingGuideline().getPosology().getDose();
+        assertEquals(3.0f, modifiedDose);
+    }
 }
