@@ -56,4 +56,13 @@ public class ePrescripCodeTest {
         assertNotEquals(code1, code2);
     }
 
+
+    @Test
+    @DisplayName("equals - Compared with null returns false")
+    void testEqualsNull() {
+        ePrescripCode code = new ePrescripCode("EP-123");
+
+        assertNotEquals(code, null);
+    }
+
 }
