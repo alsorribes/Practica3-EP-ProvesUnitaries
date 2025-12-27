@@ -58,4 +58,14 @@ public class DigitalSignatureTest {
 
         assertEquals(signature, signature);
     }
+
+
+    @Test
+    @DisplayName("equals - Different objects with same content are equal")
+    void testEqualsSameContent() {
+        DigitalSignature sig1 = new DigitalSignature(new byte[]{1, 2, 3});
+        DigitalSignature sig2 = new DigitalSignature(new byte[]{1, 2, 3});
+
+        assertEquals(sig1, sig2);
+    }
 }
