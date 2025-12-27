@@ -127,4 +127,13 @@ public class DigitalSignatureTest {
 
         assertNotEquals(sig1.hashCode(), sig2.hashCode());
     }
+
+
+    @Test
+    @DisplayName("hashCode - Null signature produces valid hash code")
+    void testHashCodeNull() {
+        DigitalSignature signature = new DigitalSignature(null);
+
+        assertDoesNotThrow(signature::hashCode);
+    }
 }
