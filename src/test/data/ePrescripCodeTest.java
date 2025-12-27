@@ -65,4 +65,14 @@ public class ePrescripCodeTest {
         assertNotEquals(code, null);
     }
 
+
+    @Test
+    @DisplayName("equals - Compared with different class returns false")
+    void testEqualsDifferentClass() {
+        ePrescripCode code = new ePrescripCode("EP-123");
+        String other = "EP-123";
+
+        assertNotEquals(code, other);
+    }
+
 }
