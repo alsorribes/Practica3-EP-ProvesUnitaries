@@ -47,4 +47,15 @@ public class DigitalSignatureTest {
 
         assertNull(signature.getSignature());
     }
+
+
+    // -------------- EQUALS CONTRACT -----------------
+    @Test
+    @DisplayName("equals - Same object returns true")
+    void testEqualsSameObject() {
+        byte[] data = {1, 2, 3};
+        DigitalSignature signature = new DigitalSignature(data);
+
+        assertEquals(signature, signature);
+    }
 }
