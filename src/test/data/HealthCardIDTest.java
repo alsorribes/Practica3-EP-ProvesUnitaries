@@ -97,7 +97,7 @@ public class HealthCardIDTest {
     }
 
 
-    // ========== TOSTRING ==========
+    // --------- TOSTRING ----------
     @Test
     @DisplayName("toString - Contains class name and personal ID")
     void testToString() {
