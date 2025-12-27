@@ -59,4 +59,20 @@ public class PosologyTest {
 
         assertEquals(FqUnit.HOUR, posology.getFreqUnit());
     }
+
+
+    // --------------- MUTABILITY CHECK ------------------
+    @Test
+    @DisplayName("Object reflects all changes after multiple setters")
+    void testMultipleSetters() {
+        Posology posology = new Posology(100.0f, 1.0f, FqUnit.DAY);
+
+        posology.setDose(200.0f);
+        posology.setFreq(3.0f);
+        posology.setFreqUnit(FqUnit.WEEK);
+
+        assertEquals(200.0f, posology.getDose());
+        assertEquals(3.0f, posology.getFreq());
+        assertEquals(FqUnit.WEEK, posology.getFreqUnit());
+    }
 }
