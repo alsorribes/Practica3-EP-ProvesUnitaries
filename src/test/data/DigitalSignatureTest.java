@@ -68,4 +68,14 @@ public class DigitalSignatureTest {
 
         assertEquals(sig1, sig2);
     }
+
+
+    @Test
+    @DisplayName("equals - Different content is not equal")
+    void testEqualsDifferentContent() {
+        DigitalSignature sig1 = new DigitalSignature(new byte[]{1, 2, 3});
+        DigitalSignature sig2 = new DigitalSignature(new byte[]{9, 8, 7});
+
+        assertNotEquals(sig1, sig2);
+    }
 }
