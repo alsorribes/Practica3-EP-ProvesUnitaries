@@ -27,4 +27,14 @@ public class HealthCardIDTest {
         // Assert
         assertEquals(code, id.getPersonalID());
     }
+
+
+    // ------------ EQUALS CONTRACTS -----------
+    @Test
+    @DisplayName("equals - Same object returns true")
+    void testEqualsSameObject(){
+        HealthCardID id = new HealthCardID("ABC123");
+
+        assertEquals(id, id);
+    }
 }
