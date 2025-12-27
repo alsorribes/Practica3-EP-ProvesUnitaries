@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * TEMPORARY -
  * Represents a medical prescription for a patient.
  */
 public class MedicalPrescription {
@@ -18,7 +17,7 @@ public class MedicalPrescription {
     private Date prescDate;
     private Date endDate;
     private DigitalSignature eSign;
-    private Map<ProductID, Object> lines; // Simplified
+    private Map<ProductID, MedicalPrescriptionLine> lines;
 
     public MedicalPrescription(HealthCardID cip, int membShipNumb, String illness) {
         this.cip = cip;
@@ -32,7 +31,28 @@ public class MedicalPrescription {
         if (lines.containsKey(prodID)) {
             throw new ProductAlreadyInPrescriptionException();
         }
-        lines.put(prodID, instruc); // Simplified
+
+        // Validate that instruc has the correct format (7 elements)
+        // Format: [dayMoment, duration, dose, freq, freqUnit, instructions]
+        if (instruc == null || instruc.length < 7) {
+            throw new IncorrectTakingGuidelinesException("Incomplete taking guidelines");
+        }
+
+        try {
+            // Parse the instructions array to create TakingGuideline
+            dayMoment dM = dayMoment.valueOf(instruc[0]);
+            float duration = Float.parseFloat(instruc[1]);
+            float dose = Float.parseFloat(instruc[2]);
+            float freq = Float.parseFloat(instruc[3]);
+            FqUnit freqUnit = FqUnit.valueOf(instruc[4]);
+            String instructions = instruc[5];
+
+            TakingGuideline guideline = new TakingGuideline(dM, duration, dose, freq, freqUnit, instructions);
+            MedicalPrescriptionLine line = new MedicalPrescriptionLine(prodID, guideline);
+            lines.put(prodID, line);
+        } catch (IllegalArgumentException e) {
+            throw new IncorrectTakingGuidelinesException("Invalid taking guidelines format");
+        }
     }
 
     public void modifyDoseInLine(ProductID prodID, float newDose)
@@ -40,7 +60,8 @@ public class MedicalPrescription {
         if (!lines.containsKey(prodID)) {
             throw new ProductNotInPrescriptionException();
         }
-        // Simplified
+        MedicalPrescriptionLine line = lines.get(prodID);
+        line.getTakingGuideline().getPosology().setDose(newDose);
     }
 
     public void removeLine(ProductID prodID) throws ProductNotInPrescriptionException {
@@ -58,6 +79,7 @@ public class MedicalPrescription {
     public Date getPrescDate() { return prescDate; }
     public Date getEndDate() { return endDate; }
     public DigitalSignature geteSign() { return eSign; }
+    public Map<ProductID, MedicalPrescriptionLine> getLines() { return lines; }
 
     public void setPrescCode(ePrescripCode prescCode) { this.prescCode = prescCode; }
     public void setPrescDate(Date prescDate) { this.prescDate = prescDate; }

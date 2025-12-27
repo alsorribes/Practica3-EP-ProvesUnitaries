@@ -1,9 +1,9 @@
 package medicalconsultation;
 
 import data.HealthCardID;
+import exceptions.IncorrectParametersException;
 
 /**
- * TEMPORARY -
  * Represents a patient's medical history.
  */
 public class MedicalHistory {
@@ -11,7 +11,13 @@ public class MedicalHistory {
     private int membShipNumb;
     private String history;
 
-    public MedicalHistory(HealthCardID cip, int memberShipNum) {
+    public MedicalHistory(HealthCardID cip, int memberShipNum) throws IncorrectParametersException {
+        if (cip == null) {
+            throw new IncorrectParametersException("HealthCardID cannot be null");
+        }
+        if (memberShipNum < 0) {
+            throw new IncorrectParametersException("Membership number cannot be negative");
+        }
         this.cip = cip;
         this.membShipNumb = memberShipNum;
         this.history = "";
