@@ -76,4 +76,25 @@ public class MedicalPrescriptionTest {
         float modifiedDose = prescription.getLines().get(productID1).getTakingGuideline().getPosology().getDose();
         assertEquals(3.0f, modifiedDose);
     }
+
+    @Test
+    public void testModifyDoseInLineProductNotFound() {
+        assertThrows(ProductNotInPrescriptionException.class, () -> {
+            prescription.modifyDoseInLine(productID1, 3.0f);
+        });
+    }
+
+    @Test
+    public void testRemoveLineSuccess() throws ProductAlreadyInPrescriptionException, IncorrectTakingGuidelinesException, ProductNotInPrescriptionException {
+        String[] instruc = {"BEFORELUNCH", "15", "1", "1", "DAY", "Take with water", ""};
+        prescription.addLine(productID1, instruc);
+
+        assertEquals(1, prescription.getLines().size());
+        assertTrue(prescription.getLines().containsKey(productID1));
+
+        prescription.removeLine(productID1);
+
+        assertEquals(0, prescription.getLines().size());
+        assertFalse(prescription.getLines().containsKey(productID1));
+    }
 }
