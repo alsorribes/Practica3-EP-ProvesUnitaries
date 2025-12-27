@@ -38,4 +38,13 @@ public class DigitalSignatureTest {
 
         assertArrayEquals(new byte[]{4, 5, 6}, signature.getSignature());
     }
+
+
+    @Test
+    @DisplayName("Constructor accepts null signature")
+    void testConstructorWithNull() {
+        DigitalSignature signature = new DigitalSignature(null);
+
+        assertNull(signature.getSignature());
+    }
 }
