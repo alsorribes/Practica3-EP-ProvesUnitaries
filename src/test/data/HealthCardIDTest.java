@@ -37,4 +37,13 @@ public class HealthCardIDTest {
 
         assertEquals(id, id);
     }
+
+    @Test
+    @DisplayName("equals - Different object with same value are equal")
+    void testEqualsSameValue(){
+        HealthCardID id1 = new HealthCardID("ABC123");
+        HealthCardID id2 = new HealthCardID("ABC123");
+
+        assertEquals(id1, id2);
+    }
 }
