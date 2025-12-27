@@ -87,4 +87,13 @@ public class DigitalSignatureTest {
 
         assertNotEquals(signature, null);
     }
+
+
+    @Test
+    @DisplayName("equals - Compared with different class returns false")
+    void testEqualsDifferentClass() {
+        DigitalSignature signature = new DigitalSignature(new byte[]{1, 2});
+
+        assertNotEquals(signature, "not a signature");
+    }
 }
