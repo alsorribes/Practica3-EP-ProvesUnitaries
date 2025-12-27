@@ -53,4 +53,11 @@ public class MedicalPrescriptionTest {
             prescription.addLine(productID1, instruc);
         });
     }
+
+    @Test
+    public void testAddLineIncorrectGuidelinesNull() {
+        assertThrows(IncorrectTakingGuidelinesException.class, () -> {
+            prescription.addLine(productID1, null);
+        });
+    }
 }
