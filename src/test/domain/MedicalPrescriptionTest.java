@@ -32,4 +32,16 @@ public class MedicalPrescriptionTest {
         assertTrue(prescription.getLines().containsKey(productID1));
         assertEquals(1, prescription.getLines().size());
     }
+
+    @Test
+    public void testAddLineDuplicateProduct() throws ProductAlreadyInPrescriptionException, IncorrectTakingGuidelinesException {
+        String[] instruc = {"BEFORELUNCH", "15", "1", "1", "DAY", "Take with water", ""};
+
+        prescription.addLine(productID1, instruc);
+
+        // Try to add the same product again
+        assertThrows(ProductAlreadyInPrescriptionException.class, () -> {
+            prescription.addLine(productID1, instruc);
+        });
+    }
 }
