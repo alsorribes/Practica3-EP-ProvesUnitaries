@@ -96,4 +96,17 @@ public class ePrescripCodeTest {
         assertNotEquals(code1.hashCode(), code2.hashCode());
     }
 
+
+    // ------------ TOSTRING -------------------
+    @Test
+    @DisplayName("toString - Contains class name and prescription code")
+    void testToString() {
+        ePrescripCode prescripCode = new ePrescripCode("EP-2025-000123");
+
+        String text = prescripCode.toString();
+
+        assertTrue(text.contains("ePrescripCode"));
+        assertTrue(text.contains("EP-2025-000123"));
+    }
+
 }
