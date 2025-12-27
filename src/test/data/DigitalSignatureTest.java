@@ -78,4 +78,13 @@ public class DigitalSignatureTest {
 
         assertNotEquals(sig1, sig2);
     }
+
+
+    @Test
+    @DisplayName("equals - Compared with null returns false")
+    void testEqualsNull() {
+        DigitalSignature signature = new DigitalSignature(new byte[]{1});
+
+        assertNotEquals(signature, null);
+    }
 }
