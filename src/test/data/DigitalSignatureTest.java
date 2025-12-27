@@ -96,4 +96,14 @@ public class DigitalSignatureTest {
 
         assertNotEquals(signature, "not a signature");
     }
+
+
+    @Test
+    @DisplayName("equals - Both signatures null are equal")
+    void testEqualsBothNull() {
+        DigitalSignature sig1 = new DigitalSignature(null);
+        DigitalSignature sig2 = new DigitalSignature(null);
+
+        assertEquals(sig1, sig2);
+    }
 }
