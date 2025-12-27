@@ -2,6 +2,7 @@ package test.data;
 
 import data.HealthCardID;
 
+import exceptions.HealthCardIDException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,9 +18,9 @@ public class HealthCardIDTest {
     // ----------- CONSTRUCTOR AND GETTERS --------------
     @Test
     @DisplayName("Constructor - Stores personal ID correctly")
-    void testContructorStoresPersonalID(){
+    void testContructorStoresPersonalID() throws HealthCardIDException {
         // Arrange
-        String code = "1234567890123456";
+        String code = "abcdeFGHIJ123456";
 
         // Act
         HealthCardID id = new HealthCardID(code);
@@ -32,17 +33,17 @@ public class HealthCardIDTest {
     // ------------ EQUALS CONTRACTS -----------
     @Test
     @DisplayName("equals - Same object returns true")
-    void testEqualsSameObject(){
-        HealthCardID id = new HealthCardID("ABC123");
+    void testEqualsSameObject() throws HealthCardIDException {
+        HealthCardID id = new HealthCardID("abcdeFGHIJ123456");
 
         assertEquals(id, id);
     }
 
     @Test
     @DisplayName("equals - Different object with same value are equal")
-    void testEqualsSameValue(){
-        HealthCardID id1 = new HealthCardID("ABC123");
-        HealthCardID id2 = new HealthCardID("ABC123");
+    void testEqualsSameValue() throws HealthCardIDException {
+        HealthCardID id1 = new HealthCardID("abcdeFGHIJ123456");
+        HealthCardID id2 = new HealthCardID("abcdeFGHIJ123456");
 
         assertEquals(id1, id2);
     }
@@ -50,9 +51,9 @@ public class HealthCardIDTest {
 
     @Test
     @DisplayName("equals - Different values are not equal")
-    void testEqualsDifferentValue(){
-        HealthCardID id1 = new HealthCardID("ABC123");
-        HealthCardID id2 = new HealthCardID("ZYX987");
+    void testEqualsDifferentValue() throws HealthCardIDException {
+        HealthCardID id1 = new HealthCardID("abcdeFGHIJ123456");
+        HealthCardID id2 = new HealthCardID("654321JIHGFedcba");
 
         assertNotEquals(id1, id2);
     }
@@ -60,8 +61,8 @@ public class HealthCardIDTest {
 
     @Test
     @DisplayName("equals - Compared with null returns false")
-    void testEqualsNull(){
-        HealthCardID id = new HealthCardID("ABC123");
+    void testEqualsNull() throws HealthCardIDException {
+        HealthCardID id = new HealthCardID("abcdeFGHIJ123456");
 
         assertNotEquals(id, null);
     }
@@ -69,9 +70,9 @@ public class HealthCardIDTest {
 
     @Test
     @DisplayName("equals - Compared with different class returns false")
-    void testEqualsDifferentClass(){
-        HealthCardID id = new HealthCardID("ABC123");
-        String other = "ABC123";
+    void testEqualsDifferentClass() throws HealthCardIDException {
+        HealthCardID id = new HealthCardID("abcdeFGHIJ123456");
+        String other = "abcdeFGHIJ123456";
 
         assertNotEquals(id, other);
     }
@@ -80,18 +81,18 @@ public class HealthCardIDTest {
     // ------------- HASHCODE CONTRACT --------------------
     @Test
     @DisplayName("hashCode - Same value produces same hash code")
-    void testHashCodeSameValue() {
-        HealthCardID id1 = new HealthCardID("ABC123");
-        HealthCardID id2 = new HealthCardID("ABC123");
+    void testHashCodeSameValue() throws HealthCardIDException {
+        HealthCardID id1 = new HealthCardID("abcdeFGHIJ123456");
+        HealthCardID id2 = new HealthCardID("abcdeFGHIJ123456");
 
         assertEquals(id1.hashCode(), id2.hashCode());
     }
 
     @Test
     @DisplayName("hashCode - Different values produce different hash codes")
-    void testHashCodeDifferentValue() {
-        HealthCardID id1 = new HealthCardID("ABC123");
-        HealthCardID id2 = new HealthCardID("XYZ999");
+    void testHashCodeDifferentValue() throws HealthCardIDException {
+        HealthCardID id1 = new HealthCardID("abcdeFGHIJ123456");
+        HealthCardID id2 = new HealthCardID("654321JIHGFedcba");
 
         assertNotEquals(id1.hashCode(), id2.hashCode());
     }
@@ -100,12 +101,42 @@ public class HealthCardIDTest {
     // --------- TOSTRING ----------
     @Test
     @DisplayName("toString - Contains class name and personal ID")
-    void testToString() {
-        HealthCardID id = new HealthCardID("ABC123");
+    void testToString() throws HealthCardIDException {
+        HealthCardID id = new HealthCardID("abcdeFGHIJ123456");
 
         String text = id.toString();
 
         assertTrue(text.contains("HealthCardID"));
-        assertTrue(text.contains("ABC123"));
+        assertTrue(text.contains("abcdeFGHIJ123456"));
+    }
+
+
+    // ----------- EXCEPTION HANDLING ----------------
+    @Test
+    @DisplayName("Constructor - Throws exception when code is null")
+    void testConstructorNullThrowsException() {
+        // Assert
+        assertThrows(HealthCardIDException.class, () -> {
+            new HealthCardID(null);
+        });
+    }
+
+    @Test
+    @DisplayName("Constructor - Throws exception when code is empty")
+    void testConstructorEmptyThrowsException() {
+        // Assert
+        assertThrows(HealthCardIDException.class, () -> {
+            new HealthCardID("");
+        });
+    }
+
+
+    @Test
+    @DisplayName("Constructor - Throws exception when code is empty")
+    void testConstructorWrongFormatThrowsException() {
+        // Assert
+        assertThrows(HealthCardIDException.class, () -> {
+            new HealthCardID("12345");
+        });
     }
 }
