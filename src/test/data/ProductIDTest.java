@@ -26,4 +26,14 @@ public class ProductIDTest {
         assertEquals(code, productID.getCode());
     }
 
+
+    // ---------- EQUALS CONTRACT ------------
+    @Test
+    @DisplayName("equals - Same object returns true")
+    void testEqualsSameObject() {
+        ProductID productID = new ProductID("ABC123");
+
+        assertEquals(productID, productID);
+    }
+
 }
