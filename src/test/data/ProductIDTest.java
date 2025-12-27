@@ -45,4 +45,14 @@ public class ProductIDTest {
 
         assertEquals(id1, id2);
     }
+
+
+    @Test
+    @DisplayName("equals - Different values are not equal")
+    void testEqualsDifferentValue() {
+        ProductID id1 = new ProductID("ABC123");
+        ProductID id2 = new ProductID("XYZ999");
+
+        assertNotEquals(id1, id2);
+    }
 }
