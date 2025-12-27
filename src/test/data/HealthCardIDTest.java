@@ -66,4 +66,14 @@ public class HealthCardIDTest {
 
         assertNotEquals(id, null);
     }
+
+
+    @Test
+    @DisplayName("equals - Compared with different class returns false")
+    void testEqualsDifferentClass(){
+        HealthCardID id = new HealthCardID("ABC123");
+        String other = "ABC123";
+
+        assertNotEquals(id, other);
+    }
 }
