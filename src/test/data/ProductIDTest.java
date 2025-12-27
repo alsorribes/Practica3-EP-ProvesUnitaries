@@ -74,4 +74,15 @@ public class ProductIDTest {
 
         assertNotEquals(productID, other);
     }
+
+
+    // -------------- HASHCODE CONTRACT ---------------
+    @Test
+    @DisplayName("hashCode - Same value produces same hash code")
+    void testHashCodeSameValue() {
+        ProductID id1 = new ProductID("ABC123");
+        ProductID id2 = new ProductID("ABC123");
+
+        assertEquals(id1.hashCode(), id2.hashCode());
+    }
 }
