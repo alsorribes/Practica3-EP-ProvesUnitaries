@@ -36,4 +36,15 @@ public class ePrescripCodeTest {
         assertEquals(code, code);
     }
 
+
+    @Test
+    @DisplayName("equals - Different objects with same value are equal")
+    void testEqualsSameValue() {
+        ePrescripCode code1 = new ePrescripCode("EP-123");
+        ePrescripCode code2 = new ePrescripCode("EP-123");
+
+        assertEquals(code1, code2);
+        assertEquals(code2, code1);
+    }
+
 }
