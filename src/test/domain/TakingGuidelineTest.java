@@ -93,4 +93,25 @@ public class TakingGuidelineTest {
         assertEquals("Take before sleeping", guideline.getInstructions());
     }
 
+
+    // --------------- MUTABILITY CHECK --------------------
+    @Test
+    @DisplayName("Object reflects all changes after multiple setters")
+    void testMultipleSetters() {
+        TakingGuideline guideline = new TakingGuideline(
+                dayMoment.BEFOREBREAKFAST, 5.0f, 250.0f, 2.0f, FqUnit.DAY, "Initial"
+        );
+
+        Posology posology = new Posology(500.0f, 3.0f, FqUnit.WEEK);
+
+        guideline.setdMoment(dayMoment.AFTERLUNCH);
+        guideline.setDuration(14.0f);
+        guideline.setPosology(posology);
+        guideline.setInstructions("Updated instructions");
+
+        assertEquals(dayMoment.AFTERLUNCH, guideline.getdMoment());
+        assertEquals(14.0f, guideline.getDuration());
+        assertEquals(posology, guideline.getPosology());
+        assertEquals("Updated instructions", guideline.getInstructions());
+    }
 }
