@@ -76,4 +76,15 @@ public class HealthCardIDTest {
 
         assertNotEquals(id, other);
     }
+
+
+    // ------------- HASHCODE CONTRACT --------------------
+    @Test
+    @DisplayName("hashCode - Same value produces same hash code")
+    void testHashCodeSameValue() {
+        HealthCardID id1 = new HealthCardID("ABC123");
+        HealthCardID id2 = new HealthCardID("ABC123");
+
+        assertEquals(id1.hashCode(), id2.hashCode());
+    }
 }
