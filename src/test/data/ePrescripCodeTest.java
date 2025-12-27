@@ -75,4 +75,15 @@ public class ePrescripCodeTest {
         assertNotEquals(code, other);
     }
 
+
+    // --------------- HASHCODE CONTRACT --------------
+    @Test
+    @DisplayName("hashCode - Same value produces same hash code")
+    void testHashCodeSameValue() {
+        ePrescripCode code1 = new ePrescripCode("EP-123");
+        ePrescripCode code2 = new ePrescripCode("EP-123");
+
+        assertEquals(code1.hashCode(), code2.hashCode());
+    }
+
 }
