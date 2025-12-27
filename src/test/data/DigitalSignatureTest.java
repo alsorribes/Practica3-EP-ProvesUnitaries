@@ -117,4 +117,14 @@ public class DigitalSignatureTest {
 
         assertEquals(sig1.hashCode(), sig2.hashCode());
     }
+
+
+    @Test
+    @DisplayName("hashCode - Different content produces different hash code")
+    void testHashCodeDifferentContent() {
+        DigitalSignature sig1 = new DigitalSignature(new byte[]{1, 2, 3});
+        DigitalSignature sig2 = new DigitalSignature(new byte[]{9, 8, 7});
+
+        assertNotEquals(sig1.hashCode(), sig2.hashCode());
+    }
 }
