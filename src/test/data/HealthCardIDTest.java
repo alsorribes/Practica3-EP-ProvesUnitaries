@@ -5,8 +5,7 @@ import data.HealthCardID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit tests for HealthCardID value object.
@@ -95,5 +94,18 @@ public class HealthCardIDTest {
         HealthCardID id2 = new HealthCardID("XYZ999");
 
         assertNotEquals(id1.hashCode(), id2.hashCode());
+    }
+
+
+    // ========== TOSTRING ==========
+    @Test
+    @DisplayName("toString - Contains class name and personal ID")
+    void testToString() {
+        HealthCardID id = new HealthCardID("ABC123");
+
+        String text = id.toString();
+
+        assertTrue(text.contains("HealthCardID"));
+        assertTrue(text.contains("ABC123"));
     }
 }
