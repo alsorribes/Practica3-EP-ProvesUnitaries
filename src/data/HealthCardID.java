@@ -1,13 +1,29 @@
 package data;
 
+import exceptions.HealthCardIDException;
+
 /**
  * The personal identifying code in the National Health Service.
  */
 public final class HealthCardID {
     private final String personalID;
 
-    public HealthCardID(String code) {
+    public HealthCardID(String code) throws HealthCardIDException {
+        // Validate that code is not null and not empty
+        if(code == null || code.trim().isEmpty()){
+            throw new HealthCardIDException("HealthCardID cannot be null or empty.");
+        }
+
+        // Validate that code contains 16 alphanumeric characters
+        if(!isValidFormat(code)){
+            throw new HealthCardIDException("HealthCardID has an invalid format: " + code);
+        }
+
         this.personalID = code;
+    }
+
+    private boolean isValidFormat(String code){
+        return code.length() == 16 && code.matches("^[a-zA-Z0-9]{16}$");
     }
 
     public String getPersonalID() {
