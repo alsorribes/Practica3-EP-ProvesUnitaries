@@ -85,4 +85,14 @@ public class ProductIDTest {
 
         assertEquals(id1.hashCode(), id2.hashCode());
     }
+
+
+    @Test
+    @DisplayName("hashCode - Different values produce different hash codes")
+    void testHashCodeDifferentValue() {
+        ProductID id1 = new ProductID("ABC123");
+        ProductID id2 = new ProductID("ZYX987");
+
+        assertNotEquals(id1.hashCode(), id2.hashCode());
+    }
 }
