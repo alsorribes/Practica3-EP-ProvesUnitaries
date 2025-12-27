@@ -44,4 +44,13 @@ public class MedicalPrescriptionTest {
             prescription.addLine(productID1, instruc);
         });
     }
+
+    @Test
+    public void testAddLineIncorrectGuidelinesIncomplete() {
+        String[] instruc = {"BEFORELUNCH", "15", "1"}; // Incomplete instructions
+
+        assertThrows(IncorrectTakingGuidelinesException.class, () -> {
+            prescription.addLine(productID1, instruc);
+        });
+    }
 }
