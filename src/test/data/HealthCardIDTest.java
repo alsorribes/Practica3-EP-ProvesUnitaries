@@ -87,4 +87,13 @@ public class HealthCardIDTest {
 
         assertEquals(id1.hashCode(), id2.hashCode());
     }
+
+    @Test
+    @DisplayName("hashCode - Different values produce different hash codes")
+    void testHashCodeDifferentValue() {
+        HealthCardID id1 = new HealthCardID("ABC123");
+        HealthCardID id2 = new HealthCardID("XYZ999");
+
+        assertNotEquals(id1.hashCode(), id2.hashCode());
+    }
 }
