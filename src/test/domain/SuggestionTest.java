@@ -42,4 +42,19 @@ public class SuggestionTest {
         assertEquals(productID, suggestion.getProductID());
         assertNull(suggestion.getGuidelines());
     }
+
+
+    // ---------------- GETTERS ---------------------
+    @Test
+    @DisplayName("getGuidelines returns the same array reference")
+    void testGetGuidelines() {
+        String[] guidelines = {"Guideline 1"};
+        Suggestion suggestion = new Suggestion(
+                Action.MODIFY,
+                new ProductID("MED-003"),
+                guidelines
+        );
+
+        assertSame(guidelines, suggestion.getGuidelines());
+    }
 }
