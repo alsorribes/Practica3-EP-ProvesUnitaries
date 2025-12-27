@@ -26,9 +26,7 @@ public class MedicalPrescriptionTest {
     @Test
     public void testAddLineSuccess() throws ProductAlreadyInPrescriptionException, IncorrectTakingGuidelinesException {
         String[] instruc = {"BEFORELUNCH", "15", "1", "1", "DAY", "Take with water", ""};
-
         prescription.addLine(productID1, instruc);
-
         assertTrue(prescription.getLines().containsKey(productID1));
         assertEquals(1, prescription.getLines().size());
     }
@@ -36,10 +34,7 @@ public class MedicalPrescriptionTest {
     @Test
     public void testAddLineDuplicateProduct() throws ProductAlreadyInPrescriptionException, IncorrectTakingGuidelinesException {
         String[] instruc = {"BEFORELUNCH", "15", "1", "1", "DAY", "Take with water", ""};
-
         prescription.addLine(productID1, instruc);
-
-        // Try to add the same product again
         assertThrows(ProductAlreadyInPrescriptionException.class, () -> {
             prescription.addLine(productID1, instruc);
         });
@@ -47,8 +42,7 @@ public class MedicalPrescriptionTest {
 
     @Test
     public void testAddLineIncorrectGuidelinesIncomplete() {
-        String[] instruc = {"BEFORELUNCH", "15", "1"}; // Incomplete instructions
-
+        String[] instruc = {"BEFORELUNCH", "15", "1"};
         assertThrows(IncorrectTakingGuidelinesException.class, () -> {
             prescription.addLine(productID1, instruc);
         });
@@ -58,6 +52,14 @@ public class MedicalPrescriptionTest {
     public void testAddLineIncorrectGuidelinesNull() {
         assertThrows(IncorrectTakingGuidelinesException.class, () -> {
             prescription.addLine(productID1, null);
+        });
+    }
+
+    @Test
+    public void testAddLineIncorrectGuidelinesInvalidFormat() {
+        String[] instruc = {"INVALID_DAY_MOMENT", "15", "1", "1", "DAY", "Take with water", ""};
+        assertThrows(IncorrectTakingGuidelinesException.class, () -> {
+            prescription.addLine(productID1, instruc);
         });
     }
 }
