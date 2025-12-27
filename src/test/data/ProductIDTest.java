@@ -95,4 +95,17 @@ public class ProductIDTest {
 
         assertNotEquals(id1.hashCode(), id2.hashCode());
     }
+
+
+    // --------- TOSTRING ------------
+    @Test
+    @DisplayName("toString - Contains class name and product code")
+    void testToString() {
+        ProductID productID = new ProductID("012345678901");
+
+        String text = productID.toString();
+
+        assertTrue(text.contains("ProductID"));
+        assertTrue(text.contains("012345678901"));
+    }
 }
