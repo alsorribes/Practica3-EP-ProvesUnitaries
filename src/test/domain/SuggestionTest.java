@@ -57,4 +57,45 @@ public class SuggestionTest {
 
         assertSame(guidelines, suggestion.getGuidelines());
     }
+
+
+    // ----------- TOSTRING ---------------
+    @Test
+    @DisplayName("toString contains action, productID and guidelines")
+    void testToStringWithGuidelines() {
+        ProductID productID = new ProductID("MED-004");
+        String[] guidelines = {"Morning", "Evening"};
+
+        Suggestion suggestion = new Suggestion(
+                Action.MODIFY,
+                productID,
+                guidelines
+        );
+
+        String text = suggestion.toString();
+
+        assertTrue(text.contains("Suggestion"));
+        assertTrue(text.contains("MODIFY"));
+        assertTrue(text.contains("MED-004"));
+        assertTrue(text.contains("Morning"));
+        assertTrue(text.contains("Evening"));
+    }
+
+    @Test
+    @DisplayName("toString shows 'none' when guidelines are null")
+    void testToStringWithoutGuidelines() {
+        ProductID productID = new ProductID("MED-005");
+
+        Suggestion suggestion = new Suggestion(
+                Action.ELIMINATE,
+                productID
+        );
+
+        String text = suggestion.toString();
+
+        assertTrue(text.contains("Suggestion"));
+        assertTrue(text.contains("ELIMINATE"));
+        assertTrue(text.contains("MED-005"));
+        assertTrue(text.contains("none"));
+    }
 }
