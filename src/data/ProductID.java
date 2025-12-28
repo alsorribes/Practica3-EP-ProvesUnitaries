@@ -4,6 +4,8 @@ import exceptions.IncorrectParametersException;
 
 /**
  * Universal Product Code for medicines.
+ * Accepts product codes between 12 and 16 alphanumeric characters.
+ * Common formats: UPC-12, EAN-13, GTIN-14, etc.
  */
 public final class ProductID {
     private final String code;
@@ -14,16 +16,21 @@ public final class ProductID {
             throw new IncorrectParametersException("ProductID cannot be null or empty.");
         }
 
-        // Validate that code contains 16 alphanumeric characters
+        // Validate that code contains 12-16 alphanumeric characters
         if(!isValidFormat(code)){
-            throw new IncorrectParametersException("ProductID has an invalid format: " + code);
+            throw new IncorrectParametersException(
+                    "ProductID has an invalid format: " + code +
+                            ". Expected 12-16 alphanumeric characters.");
         }
 
         this.code = code;
     }
 
     private boolean isValidFormat(String code){
-        return code.length() == 16 && code.matches("^[a-zA-Z0-9]{16}$");
+        // Accept product codes between 12 and 16 alphanumeric characters
+        // Common formats: UPC-12, EAN-13, GTIN-14, etc.
+        int length = code.length();
+        return length >= 12 && length <= 16 && code.matches("^[a-zA-Z0-9]+$");
     }
 
 

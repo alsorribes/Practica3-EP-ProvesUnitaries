@@ -23,7 +23,7 @@ public interface HealthNationalService {
      * @throws HealthCardIDException if the patient ID is not registered in the HNS
      */
     MedicalHistory getMedicalHistory(HealthCardID cip)
-            throws ConnectException, HealthCardIDException;
+            throws ConnectException, HealthCardIDException, IncorrectParametersException;
 
     /**
      * Retrieves the medical prescription of a patient for a specific illness.
@@ -55,7 +55,7 @@ public interface HealthNationalService {
     MedicalPrescription sendHistoryAndPrescription(HealthCardID cip, MedicalHistory hce,
                                                    String illness, MedicalPrescription mPresc)
             throws ConnectException, HealthCardIDException,
-            AnyCurrentPrescriptionException, NotCompletedMedicalPrescriptionException;
+            AnyCurrentPrescriptionException, NotCompletedMedicalPrescriptionException, IncorrectParametersException;
 
     /**
      * Internal operation: generates a new treatment code and registers it in the system.
@@ -65,5 +65,5 @@ public interface HealthNationalService {
      * @throws ConnectException if the network connection fails
      */
     MedicalPrescription generateTreatmCodeAndRegister(MedicalPrescription ePresc)
-            throws ConnectException;
+            throws ConnectException, IncorrectParametersException;
 }

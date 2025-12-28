@@ -30,7 +30,7 @@ public class HealthNationalServiceStubSuccess implements HealthNationalService {
 
     @Override
     public MedicalHistory getMedicalHistory(HealthCardID cip)
-            throws ConnectException, HealthCardIDException {
+            throws ConnectException, HealthCardIDException, IncorrectParametersException {
 
         // Simulate successful retrieval
         String cipCode = cip.getPersonalID();
@@ -64,7 +64,7 @@ public class HealthNationalServiceStubSuccess implements HealthNationalService {
     public MedicalPrescription sendHistoryAndPrescription(
             HealthCardID cip, MedicalHistory hce, String illness, MedicalPrescription mPresc)
             throws ConnectException, HealthCardIDException,
-            AnyCurrentPrescriptionException, NotCompletedMedicalPrescriptionException {
+            AnyCurrentPrescriptionException, NotCompletedMedicalPrescriptionException, IncorrectParametersException {
 
         // Validate prescription is complete (has signature and dates)
         if (mPresc.geteSign() == null) {
@@ -83,7 +83,7 @@ public class HealthNationalServiceStubSuccess implements HealthNationalService {
 
     @Override
     public MedicalPrescription generateTreatmCodeAndRegister(MedicalPrescription ePresc)
-            throws ConnectException {
+            throws ConnectException, IncorrectParametersException {
 
         // Generate a new treatment code
         String newCode = "TREAT_" + System.currentTimeMillis();

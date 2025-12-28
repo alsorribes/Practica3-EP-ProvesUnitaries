@@ -23,11 +23,29 @@ public class MedicalHistory {
         this.history = "";
     }
 
+    /**
+     * Adds medical history annotations.
+     *
+     * @param annot the annotation to add
+     * @throws IllegalArgumentException if annotation is null or empty
+     */
     public void addMedicalHistoryAnnotations(String annot) {
+        if (annot == null || annot.trim().isEmpty()) {
+            throw new IllegalArgumentException("Annotation cannot be null or empty");
+        }
         this.history += annot + "\n";
     }
 
+    /**
+     * Sets a new doctor by updating the membership number.
+     *
+     * @param mshN the new membership number
+     * @throws IllegalArgumentException if membership number is negative
+     */
     public void setNewDoctor(int mshN) {
+        if (mshN < 0) {
+            throw new IllegalArgumentException("Membership number cannot be negative");
+        }
         this.membShipNumb = mshN;
     }
 
