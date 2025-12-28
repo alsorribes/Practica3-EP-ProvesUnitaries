@@ -48,27 +48,32 @@ public class DecisionMakingAIStubSuccess implements DecisionMakingAI {
     public List<Suggestion> parseSuggest(String aiAnswer) {
         List<Suggestion> suggestions = new ArrayList<>();
 
-        // Simulate parsing the AI response into structured suggestions
-        // INSERT suggestion
-        suggestions.add(new Suggestion(
-                Suggestion.Action.INSERT,
-                new ProductID("243516578917"),
-                new String[]{"BEFORELUNCH", "15", "1", "1", "DAY", "Tomar con abundante agua"}
-        ));
+        try {
+            // Simulate parsing the AI response into structured suggestions
+            // INSERT suggestion
+            suggestions.add(new Suggestion(
+                    Suggestion.Action.INSERT,
+                    new ProductID("243516578917"),
+                    new String[]{"BEFORELUNCH", "15", "1", "1", "DAY", "Tomar con abundante agua"}
+            ));
 
-        // MODIFY suggestion
-        suggestions.add(new Suggestion(
-                Suggestion.Action.MODIFY,
-                new ProductID("640557143200"),
-                new String[]{"", "", "3", "", "", ""} // Only dose modified
-        ));
+            // MODIFY suggestion
+            suggestions.add(new Suggestion(
+                    Suggestion.Action.MODIFY,
+                    new ProductID("640557143200"),
+                    new String[]{"", "", "3", "", "", ""} // Only dose modified
+            ));
 
-        // ELIMINATE suggestion
-        suggestions.add(new Suggestion(
-                Suggestion.Action.ELIMINATE,
-                new ProductID("789012345678"),
-                null // No guidelines for elimination
-        ));
+            // ELIMINATE suggestion
+            suggestions.add(new Suggestion(
+                    Suggestion.Action.ELIMINATE,
+                    new ProductID("789012345678"),
+                    null // No guidelines for elimination
+            ));
+        } catch (IncorrectParametersException e) {
+            // This should never happen in our test stub with valid codes
+            throw new RuntimeException("Test stub configuration error: " + e.getMessage(), e);
+        }
 
         return suggestions;
     }

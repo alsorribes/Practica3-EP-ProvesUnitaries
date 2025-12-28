@@ -3,6 +3,7 @@ package test.domain;
 import medicalconsultation.Suggestion;
 import medicalconsultation.Suggestion.Action;
 import data.ProductID;
+import exceptions.IncorrectParametersException;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,9 +18,9 @@ public class SuggestionTest {
     // --------------- CONSTRUCTOR AND GETTERS ---------------------
     @Test
     @DisplayName("Constructor with guidelines initializes all fields correctly")
-    void testConstructorWithGuidelines() {
+    void testConstructorWithGuidelines() throws IncorrectParametersException {
         Action action = Action.INSERT;
-        ProductID productID = new ProductID("MED-001");
+        ProductID productID = new ProductID("MED001PRODUCT12"); // 15 chars - valid
         String[] guidelines = {"Take after meals", "Do not exceed dose"};
 
         Suggestion suggestion = new Suggestion(action, productID, guidelines);
@@ -32,9 +33,9 @@ public class SuggestionTest {
 
     @Test
     @DisplayName("Constructor without guidelines sets guidelines to null")
-    void testConstructorWithoutGuidelines() {
+    void testConstructorWithoutGuidelines() throws IncorrectParametersException {
         Action action = Action.ELIMINATE;
-        ProductID productID = new ProductID("MED-002");
+        ProductID productID = new ProductID("MED002PRODUCT12"); // 15 chars - valid
 
         Suggestion suggestion = new Suggestion(action, productID);
 
@@ -47,11 +48,11 @@ public class SuggestionTest {
     // ---------------- GETTERS ---------------------
     @Test
     @DisplayName("getGuidelines returns the same array reference")
-    void testGetGuidelines() {
+    void testGetGuidelines() throws IncorrectParametersException {
         String[] guidelines = {"Guideline 1"};
         Suggestion suggestion = new Suggestion(
                 Action.MODIFY,
-                new ProductID("MED-003"),
+                new ProductID("MED003PRODUCT12"), // 15 chars - valid
                 guidelines
         );
 
@@ -62,8 +63,8 @@ public class SuggestionTest {
     // ----------- TOSTRING ---------------
     @Test
     @DisplayName("toString contains action, productID and guidelines")
-    void testToStringWithGuidelines() {
-        ProductID productID = new ProductID("MED-004");
+    void testToStringWithGuidelines() throws IncorrectParametersException {
+        ProductID productID = new ProductID("MED004PRODUCT12"); // 15 chars - valid
         String[] guidelines = {"Morning", "Evening"};
 
         Suggestion suggestion = new Suggestion(
@@ -76,15 +77,15 @@ public class SuggestionTest {
 
         assertTrue(text.contains("Suggestion"));
         assertTrue(text.contains("MODIFY"));
-        assertTrue(text.contains("MED-004"));
+        assertTrue(text.contains("MED004PRODUCT12"));
         assertTrue(text.contains("Morning"));
         assertTrue(text.contains("Evening"));
     }
 
     @Test
     @DisplayName("toString shows 'none' when guidelines are null")
-    void testToStringWithoutGuidelines() {
-        ProductID productID = new ProductID("MED-005");
+    void testToStringWithoutGuidelines() throws IncorrectParametersException {
+        ProductID productID = new ProductID("MED005PRODUCT12"); // 15 chars - valid
 
         Suggestion suggestion = new Suggestion(
                 Action.ELIMINATE,
@@ -95,7 +96,7 @@ public class SuggestionTest {
 
         assertTrue(text.contains("Suggestion"));
         assertTrue(text.contains("ELIMINATE"));
-        assertTrue(text.contains("MED-005"));
+        assertTrue(text.contains("MED005PRODUCT12"));
         assertTrue(text.contains("none"));
     }
 }

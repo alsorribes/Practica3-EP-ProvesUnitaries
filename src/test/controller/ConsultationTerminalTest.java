@@ -43,7 +43,7 @@ class ConsultationTerminalTest {
      * Called before each test.
      */
     @BeforeEach
-    void setUp() {
+    void setUp() throws IncorrectParametersException {
         // Initialize system under test
         terminal = new ConsultationTerminal();
 
@@ -53,7 +53,7 @@ class ConsultationTerminalTest {
         aiSuccess = new DecisionMakingAIStubSuccess();
         aiWithErrors = new DecisionMakingAIStubWithErrors();
 
-        // Initialize test data
+        // Initialize test data - NOW with proper exception handling
         validCip = new HealthCardID("1234567890123456");
         validIllness = "Diabetes";
         validProductID = new ProductID("243516578917");

@@ -8,7 +8,6 @@ import medicalconsultation.MedicalPrescription;
 import services.HealthNationalService;
 
 import java.net.ConnectException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,8 +36,13 @@ public class HealthNationalServiceStubSuccess implements HealthNationalService {
 
         // If not in our "database", create a new one
         if (!medicalHistories.containsKey(cipCode)) {
-            MedicalHistory history = new MedicalHistory(cip, 12345);
-            medicalHistories.put(cipCode, history);
+            try {
+                MedicalHistory history = new MedicalHistory(cip, 12345);
+                medicalHistories.put(cipCode, history);
+            } catch (IncorrectParametersException e) {
+                // This should never happen in our test stub
+                throw new RuntimeException("Test stub configuration error: " + e.getMessage(), e);
+            }
         }
 
         return medicalHistories.get(cipCode);
@@ -53,8 +57,13 @@ public class HealthNationalServiceStubSuccess implements HealthNationalService {
 
         // If not in our "database", create a new one
         if (!prescriptions.containsKey(key)) {
-            MedicalPrescription prescription = new MedicalPrescription(cip, 12345, illness);
-            prescriptions.put(key, prescription);
+            try {
+                MedicalPrescription prescription = new MedicalPrescription(cip, 12345, illness);
+                prescriptions.put(key, prescription);
+            } catch (IncorrectParametersException e) {
+                // This should never happen in our test stub
+                throw new RuntimeException("Test stub configuration error: " + e.getMessage(), e);
+            }
         }
 
         return prescriptions.get(key);
@@ -85,8 +94,8 @@ public class HealthNationalServiceStubSuccess implements HealthNationalService {
     public MedicalPrescription generateTreatmCodeAndRegister(MedicalPrescription ePresc)
             throws ConnectException, IncorrectParametersException {
 
-        // Generate a new treatment code
-        String newCode = "TREAT_" + System.currentTimeMillis();
+        // Generate a new treatment code (16 alphanumeric characters as required)
+        String newCode = String.format("TREAT%012d", System.currentTimeMillis() % 1000000000000L);
         ePrescripCode prescCode = new ePrescripCode(newCode);
 
         // Set the code on the prescription

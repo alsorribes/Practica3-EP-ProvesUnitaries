@@ -46,7 +46,7 @@ public class HealthNationalServiceStubWithErrors implements HealthNationalServic
 
     @Override
     public MedicalHistory getMedicalHistory(HealthCardID cip)
-            throws ConnectException, HealthCardIDException {
+            throws ConnectException, HealthCardIDException, IncorrectParametersException {
 
         if (throwConnectException) {
             throw new ConnectException("Simulated network failure");
@@ -57,7 +57,12 @@ public class HealthNationalServiceStubWithErrors implements HealthNationalServic
         }
 
         // If no error configured, return a basic history
-        return new MedicalHistory(cip, 12345);
+        try {
+            return new MedicalHistory(cip, 12345);
+        } catch (IncorrectParametersException e) {
+            // This should never happen in our test stub with valid CIP
+            throw new RuntimeException("Test stub configuration error: " + e.getMessage(), e);
+        }
     }
 
     @Override
@@ -78,14 +83,19 @@ public class HealthNationalServiceStubWithErrors implements HealthNationalServic
         }
 
         // If no error configured, return a basic prescription
-        return new MedicalPrescription(cip, 12345, illness);
+        try {
+            return new MedicalPrescription(cip, 12345, illness);
+        } catch (IncorrectParametersException e) {
+            // This should never happen in our test stub with valid parameters
+            throw new RuntimeException("Test stub configuration error: " + e.getMessage(), e);
+        }
     }
 
     @Override
     public MedicalPrescription sendHistoryAndPrescription(
             HealthCardID cip, MedicalHistory hce, String illness, MedicalPrescription mPresc)
             throws ConnectException, HealthCardIDException,
-            AnyCurrentPrescriptionException, NotCompletedMedicalPrescriptionException {
+            AnyCurrentPrescriptionException, NotCompletedMedicalPrescriptionException, IncorrectParametersException {
 
         if (throwConnectException) {
             throw new ConnectException("Simulated network failure");
@@ -111,7 +121,7 @@ public class HealthNationalServiceStubWithErrors implements HealthNationalServic
 
     @Override
     public MedicalPrescription generateTreatmCodeAndRegister(MedicalPrescription ePresc)
-            throws ConnectException {
+            throws ConnectException, IncorrectParametersException {
 
         if (throwConnectException) {
             throw new ConnectException("Simulated network failure during code generation");
