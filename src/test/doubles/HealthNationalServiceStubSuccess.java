@@ -22,6 +22,9 @@ public class HealthNationalServiceStubSuccess implements HealthNationalService {
     private Map<String, MedicalHistory> medicalHistories;
     private Map<String, MedicalPrescription> prescriptions;
 
+    // Counter for generating unique prescription codes
+    private static int codeCounter = 1;
+
     public HealthNationalServiceStubSuccess() {
         this.medicalHistories = new HashMap<>();
         this.prescriptions = new HashMap<>();
@@ -94,8 +97,16 @@ public class HealthNationalServiceStubSuccess implements HealthNationalService {
     public MedicalPrescription generateTreatmCodeAndRegister(MedicalPrescription ePresc)
             throws ConnectException, IncorrectParametersException {
 
-        // Generate a new treatment code (16 alphanumeric characters as required)
-        String newCode = String.format("TREAT%012d", System.currentTimeMillis() % 1000000000000L);
+        // Generate a valid 16-character alphanumeric code
+        // Format: EP + 14 digits (padded with zeros)
+        // Example: EP00000000000001, EP00000000000002, etc.
+        String newCode = String.format("EP%014d", codeCounter++);
+
+        // Verify the code is exactly 16 characters
+        if (newCode.length() != 16) {
+            throw new RuntimeException("Generated code has invalid length: " + newCode.length() + " - Code: " + newCode);
+        }
+
         ePrescripCode prescCode = new ePrescripCode(newCode);
 
         // Set the code on the prescription

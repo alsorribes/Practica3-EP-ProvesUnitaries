@@ -99,7 +99,7 @@ public class ConsultationTerminal {
      * @throws AnyCurrentPrescriptionException if no active prescription for this illness
      */
     public void initRevision(HealthCardID cip, String illness)
-            throws ConnectException, HealthCardIDException, AnyCurrentPrescriptionException {
+            throws ConnectException, HealthCardIDException, AnyCurrentPrescriptionException, IncorrectParametersException {
 
         // Validate input parameters
         if (cip == null || illness == null || illness.trim().isEmpty()) {
@@ -575,7 +575,7 @@ public class ConsultationTerminal {
             throws ConnectException, HealthCardIDException,
             AnyCurrentPrescriptionException,
             NotCompletedMedicalPrescriptionException,
-            ProceduralException {
+            ProceduralException, IncorrectParametersException {
 
         // Check preconditions
         if (!prescriptionEditionMode) {
